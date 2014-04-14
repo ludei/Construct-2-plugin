@@ -66,7 +66,7 @@ cr.plugins_.CJSAds = function(runtime)
 		this.socialServiceClientID 	= this.properties[4];
 		this.onConsumePurchaseFailedTransactionId 	= "";
 		this.onConsumePurchaseCompleted 			= "";
-		
+
 		self = this;
 		
 		if (this.runtime.isCocoonJs)
@@ -150,7 +150,7 @@ cr.plugins_.CJSAds = function(runtime)
 				
 				CocoonJS["Store"]["onProductPurchaseStarted"].addEventListener(function (productinfo)
 				{
-					self.triggerProduct = productinfo["productId"];
+					self.triggerProduct = (productinfo["productId"]) ? productinfo["productId"] : productinfo;
 					self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnPurchaseStart, self);
 				});
 				
@@ -185,26 +185,34 @@ cr.plugins_.CJSAds = function(runtime)
 			*/
 			if(this.socialServiceSelected === 0) return;
 
-			/*
+			/*l
 			* Set the social interface for the selected service
 			*/
 			function startGameCenter(){
 				console.log("GameCenter selected as social service");
 				this.socialService = CocoonJS["Social"]["GameCenter"];
-				if(!!this.socialService["nativeExtensionObjectAvailable"])
+				if(this.socialService){
+					if(!!this.socialService["nativeExtensionObjectAvailable"])
 					this.socialServiceInterface = this.socialService.getSocialInterface();
+				}else{
+					throw new Error("Cannot find GameCenter service, are you using the latest CocoonJS Extensions?");
+				}
 			}
 
 			function startGooglePlay(){
 				console.log("GooglePlayGames selected as social service");
 				this.socialService = CocoonJS["Social"]["GooglePlayGames"];
-				var config = {};
+				if(this.socialService){
+					var config = {};
 
-				if(this.socialServiceClientID) config.clientId = this.socialServiceClientID;
-				this.socialService.init(config);
+					if(this.socialServiceClientID) config.clientId = this.socialServiceClientID;
+					this.socialService.init(config);
 
-				if(!!this.socialService["nativeExtensionObjectAvailable"]){
-					this.socialServiceInterface = this.socialService.getSocialInterface();
+					if(!!this.socialService["nativeExtensionObjectAvailable"]){
+						this.socialServiceInterface = this.socialService.getSocialInterface();
+					}
+				}else{
+					throw new Error("Cannot find GooglePlayGames service, are you using the latest CocoonJS Extensions?");
 				}
 			}
 			
@@ -467,7 +475,7 @@ cr.plugins_.CJSAds = function(runtime)
 	{
 		if (!this.runtime.isCocoonJs)
 			return;
-		
+
 		CocoonJS["Store"]["purchaseProduct"](productid);
 	};
 
@@ -499,7 +507,7 @@ cr.plugins_.CJSAds = function(runtime)
 	{
 		if (!this.runtime.isCocoonJs)
 			return;
-		
+
 		var typestr = ["text", "num", "phone", "email", "url"][type_];
 		
 		CocoonJS["App"]["showTextDialog"](title_, message_, initial_, typestr, canceltext_, oktext_);
@@ -530,7 +538,11 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceRequestLogin = function ()
 	{
-		this.socialServiceInterface.login(socialServiceRequestLoginCallback);
+		if(this.socialServiceInterface.isLoggedIn()){
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceLoginSuccess, self);
+		}else{
+			this.socialServiceInterface.login(socialServiceRequestLoginCallback);
+		}
 	};
 
 	Acts.prototype.socialServiceRequestLogout = function ()

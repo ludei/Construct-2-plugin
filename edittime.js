@@ -51,9 +51,9 @@ AddCondition(15, cf_trigger, "On products fetch started", "In-app purchase", "On
 AddCondition(16, cf_trigger, "On consume purchase failed", "In-app purchase", "On consume purchase failed", "Triggered when the purchase has failed.", "onConsumePurchaseFailed");
 
 // Social service callbacks
-AddCondition(17, cf_trigger, "On login succeeded", "Leaderboards", "On Login succeeded", "Triggered when the user has logged into the social service.", "onSocialServiceLoginSuccess");
+AddCondition(17, cf_trigger, "On login succeeded", "Social", "On Login succeeded", "Triggered when the user has logged into the social service.", "onSocialServiceLoginSuccess");
 
-AddCondition(18, cf_trigger, "On login failed", "Leaderboards", "On Login Failed", "Triggered if the login of the social service has failed.", "onSocialServiceLoginFailed");
+AddCondition(18, cf_trigger, "On login failed", "Social", "On Login Failed", "Triggered if the login of the social service has failed.", "onSocialServiceLoginFailed");
 
 AddCondition(19, cf_trigger, "On score submit success", "Leaderboards", "On score submit success", "Triggered after submitting a score completes successfully", "onSocialServiceSubmitScoreSuccess");
 
@@ -124,10 +124,8 @@ AddAction(11, 0, "Refresh fullscreen ad", "Ads", "Refresh fullscreen ad", "Repla
 AddStringParam("Product list", 'The product list followed by commas of products IDs that you want to fetch from store server, example: "remove.ads,buy.coins,buy.magical.sword"');
 AddAction(12, 0, "Fetch products from store", "In-app purchase", "Fetch those products from store: <i>{0}</i>", "Fetch products from store", "fetchProductsFromStore");
 
-AddAction(13, 0, "Restore purchases", "In-app purchase", "Restore purchases", "Restoring the purchases is the way of returning purchased items information from the platform Store. ", "restorePurchases");
-
 // Social service actions
-AddAction(14, 0, "Request login", "Leaderboards", "Request login", "", "socialServiceRequestLogin");
+AddAction(14, 0, "Request login", "Social", "Request login", "", "socialServiceRequestLogin");
 
 AddNumberParam("Score", "The score to submit to Game Center.");
 AddStringParam("Leaderboard", "The name of the leaderboard to submit to, e.g. \"My Game Name\"");
@@ -192,8 +190,8 @@ var property_list = [
 	new cr.Property(ept_combo,	
 		"Leaderboards Service",	
 		"None",
-		"The service that will handle the leaderboards for your game", 
-		"None|Game Center and Google Play Games|GameCenter|Google Play Games"), // Facebook not available yet
+		"The service that will handle the leaderboards/achievements for your game", 
+		"None|Based on user operating system|GameCenter|Google Play Games"), // Facebook not available yet
 	new cr.Property(ept_combo,
 		"Store sandbox",
 		"Enabled",

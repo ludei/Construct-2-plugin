@@ -4,21 +4,23 @@
 assert2(cr, "cr namespace not created");
 assert2(cr.plugins_, "cr.plugins_ not created");
 
-/////////////////////////////////////
-// Plugin class
+/**
+* Object holder for the plugin
+*/
 cr.plugins_.CJSAds = function(runtime)
 {
 	this.runtime = runtime;
 };
 
-/////////////////////////////////////
-// C2 plugin
+/**
+* C2 plugin
+*/
 (function ()
 {
 	var input_text = "";
 	var products_list = [];
 	var requested_score = 0;
-	
+	var showBanner = true;
 	var bannerPosition = 0;
 	var preloadingBanner = false;
 	var bannerReady = false;
@@ -27,8 +29,6 @@ cr.plugins_.CJSAds = function(runtime)
 	
 	var pluginProto = cr.plugins_.CJSAds.prototype;
 		
-	/////////////////////////////////////
-	// Object type class
 	pluginProto.Type = function(plugin)
 	{
 		this.plugin = plugin;
@@ -41,8 +41,9 @@ cr.plugins_.CJSAds = function(runtime)
 	{
 	};
 
-	/////////////////////////////////////
-	// Instance class
+	/**
+	* C2 specific behaviour
+	*/
 	pluginProto.Instance = function(type)
 	{
 		this.type = type;
@@ -50,21 +51,23 @@ cr.plugins_.CJSAds = function(runtime)
 	};
 	
 	var instanceProto = pluginProto.Instance.prototype;
-
+	var self;
 	instanceProto.onCreate = function()
 	{
-		this.isShowingBanner = false;
-		this.isShowingFullscreen = false;
-		this.triggerProduct = "";
-		this.socialService = null;
+		this.isShowingBanner  		= false;
+		this.isShowingFullscreen 	= false;
+		this.triggerProduct 		= "";
+		this.socialService 			= null;
 		this.socialServiceAvailable = false;
-		this.storeServiceAvailable = (this.runtime.isCocoonJs && typeof CocoonJS["Store"]["nativeExtensionObjectAvailable"] !== "undefined");
-		this.storeManaged = (this.properties[1] !== 1);
-		this.storeSandboxed = (this.properties[2] !== 0);
-		this.onConsumePurchaseFailedTransactionId = "";
-		this.onConsumePurchaseCompleted = "";
-		
-		var self = this;
+		this.socialServiceSelected 	= this.properties[2];
+		this.storeServiceAvailable 	= (this.runtime.isCocoonJs && typeof CocoonJS["Store"]["nativeExtensionObjectAvailable"] !== "undefined");
+		this.storeManaged 			= (this.properties[1] !== 1);
+		this.storeSandboxed 		= (this.properties[3] !== 0);
+		this.socialServiceClientID 	= this.properties[4];
+		this.onConsumePurchaseFailedTransactionId 	= "";
+		this.onConsumePurchaseCompleted 			= "";
+
+		self = this;
 		
 		if (this.runtime.isCocoonJs)
 		{
@@ -89,8 +92,10 @@ cr.plugins_.CJSAds = function(runtime)
 				
 				if (!preloadingBanner)
 				{
-					CocoonJS["Ad"]["setBannerLayout"](bannerPosition);
-					CocoonJS["Ad"]["showBanner"]();
+					if(showBanner){
+						CocoonJS["Ad"]["setBannerLayout"](bannerPosition);
+						CocoonJS["Ad"]["showBanner"]();
+					}
 				}
 			});
 			
@@ -147,7 +152,7 @@ cr.plugins_.CJSAds = function(runtime)
 				
 				CocoonJS["Store"]["onProductPurchaseStarted"].addEventListener(function (productinfo)
 				{
-					self.triggerProduct = productinfo["productId"];
+					self.triggerProduct = (productinfo["productId"]) ? productinfo["productId"] : productinfo;
 					self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnPurchaseStart, self);
 				});
 				
@@ -177,45 +182,56 @@ cr.plugins_.CJSAds = function(runtime)
 
 			}
 			
-			this.socialService = CocoonJS["SocialGaming"]["GameCenter"];
-			this.socialServiceAvailable = !!this.socialService["nativeExtensionObjectAvailable"];
+			/**
+			* No social service selected, return.
+			*/
+			if(this.socialServiceSelected === 0) return;
+
+			/*l
+			* Set the social interface for the selected service
+			*/
+			function startGameCenter(){
+				console.log("GameCenter selected as social service");
+				this.socialService = CocoonJS["Social"]["GameCenter"];
+				if(this.socialService){
+					if(!!this.socialService["nativeExtensionObjectAvailable"])
+					this.socialServiceInterface = this.socialService.getSocialInterface();
+				}else{
+					throw new Error("Cannot find GameCenter service, are you using the latest CocoonJS Extensions?");
+				}
+			}
+
+			function startGooglePlay(){
+				console.log("GooglePlayGames selected as social service");
+				this.socialService = CocoonJS["Social"]["GooglePlayGames"];
+				if(this.socialService){
+					var config = {};
+
+					if(this.socialServiceClientID) config.clientId = this.socialServiceClientID;
+					this.socialService.init(config);
+
+					if(!!this.socialService["nativeExtensionObjectAvailable"]){
+						this.socialServiceInterface = this.socialService.getSocialInterface();
+					}
+				}else{
+					throw new Error("Cannot find GooglePlayGames service, are you using the latest CocoonJS Extensions?");
+				}
+			}
 			
-			this.socialService["onRequestLoginSucceed"].addEventListener(function () {
-				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnGCLoginSuccess, self);
-			});
-			
-			this.socialService["onRequestLoginFailed"].addEventListener(function () {
-				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnGCLoginFail, self);
-			});
-			
-			this.socialService["onLogout"].addEventListener(function () {
-				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnGCLogout, self);
-			});
-			
-			this.socialService["onRequestUserScoreSucceed"].addEventListener(function (userInfo) {
-				requested_score = userInfo["score"] || 0;
-				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnGCScoreReceived, self);
-			});
-			
-			this.socialService["onRequestUserScoreFailed"].addEventListener(function () {
-				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnGCScoreUnavailable, self);
-			});
-			
-			this.socialService["onSubmitUserScoreSucceed"].addEventListener(function () {
-				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnGCScoreSubmitSuccess, self);
-			});
-			
-			this.socialService["onSubmitUserScoreFailed"].addEventListener(function () {
-				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnGCScoreSubmitFail, self);
-			});
-			
-			this.socialService["onLeaderboardViewSucceed"].addEventListener(function () {
-				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnGCLeaderboardOpen, self);
-			});
-			
-			this.socialService["onLeaderboardViewClosed"].addEventListener(function () {
-				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnGCLeaderboardClose, self);
-			});
+			if(this.socialServiceSelected === 2) startGameCenter.apply(this,[]);
+
+			if(this.socialServiceSelected === 3) startGooglePlay.apply(this,[]);
+
+			if(this.socialServiceSelected === 1){
+				if(CocoonJS["Social"]["GooglePlayGames"]["nativeExtensionObjectAvailable"]){
+					startGooglePlay.apply(this,[]);
+				}else if(CocoonJS["Social"]["GameCenter"]["nativeExtensionObjectAvailable"]){
+					startGameCenter.apply(this,[]);
+				}else{
+					return;
+				}
+			}
+
 		}
 	};
 
@@ -313,68 +329,73 @@ cr.plugins_.CJSAds = function(runtime)
 		return true;
 	};
 	
-	Cnds.prototype.IsGCAvailable = function ()
+	Cnds.prototype.onSocialServiceLoginSuccess = function ()
 	{
-		return this.socialServiceAvailable;
+		return true;
 	};
-	
-	Cnds.prototype.IsGCLoggedIn = function ()
+
+	Cnds.prototype.onSocialServiceLoginFailed = function ()
 	{
-		if (!this.socialServiceAvailable)
-			return false;
-			
-		return this.socialService["isLoggedIn"]();
+		return true;
 	};
-	
-	Cnds.prototype.OnGCLoginSuccess = function ()
+
+	Cnds.prototype.onSocialServiceSubmitScoreSuccess = function ()
+	{
+		return true;
+	};
+
+	Cnds.prototype.onSocialServiceSubmitScoreFailed = function ()
 	{
 		return true;
 	};
 	
-	Cnds.prototype.OnGCLoginFail = function ()
+	Cnds.prototype.onSocialServiceRequestScoreSuccess = function ()
+	{
+		return true;
+	};
+
+	Cnds.prototype.onSocialServiceRequestScoreFailed = function ()
+	{
+		return true;
+	};
+
+	Cnds.prototype.onSocialServiceOpenLeaderBoardSuccess = function ()
+	{
+		return true;
+	};
+
+	Cnds.prototype.onSocialServiceOpenLeaderBoardClosed = function ()
 	{
 		return true;
 	};
 	
-	Cnds.prototype.OnGCLogout = function ()
-	{
+	Cnds.prototype.onSocialServiceOpenAchievementsSuccess = function(){
 		return true;
 	};
-	
-	Cnds.prototype.OnGCScoreReceived = function ()
-	{
+
+	Cnds.prototype.onSocialServiceOpenAchievementsClosed = function(){
 		return true;
 	};
-	
-	Cnds.prototype.OnGCScoreUnavailable = function ()
-	{
+
+	Cnds.prototype.onSocialServiceResetAchievementsCompleted = function(){
 		return true;
 	};
-	
-	Cnds.prototype.OnGCScoreSubmitSuccess = function ()
-	{
+
+	Cnds.prototype.onSocialServiceResetAchievementsFailed = function(){
 		return true;
 	};
-	
-	Cnds.prototype.OnGCScoreSubmitFail = function ()
-	{
+	Cnds.prototype.onSocialServiceSubmitAchievementCompleted = function(){
 		return true;
 	};
-	
-	Cnds.prototype.OnGCLeaderboardOpen = function ()
-	{
+	Cnds.prototype.onSocialServiceSubmitAchievementFailed = function(){
 		return true;
 	};
-	
-	Cnds.prototype.OnGCLeaderboardClose = function ()
-	{
-		return true;
-	};
-	
+
 	pluginProto.cnds = new Cnds();
 	
-	//////////////////////////////////////
-	// Actions
+	/**
+	* Plugin actions
+	*/
 	function Acts() {};
 	
 	Acts.prototype.ShowBanner = function (layout_)
@@ -387,6 +408,7 @@ cr.plugins_.CJSAds = function(runtime)
 		
 		if (bannerReady)
 		{
+			showBanner = true;
 			CocoonJS["Ad"]["setBannerLayout"](bannerPosition);
 			CocoonJS["Ad"]["showBanner"]();
 		}
@@ -413,7 +435,7 @@ cr.plugins_.CJSAds = function(runtime)
 	{
 		if (!this.runtime.isCocoonJs)
 			return;
-		
+		showBanner = false;
 		CocoonJS["Ad"]["hideBanner"]();
 		this.isShowingBanner = false;
 	};
@@ -456,7 +478,7 @@ cr.plugins_.CJSAds = function(runtime)
 	{
 		if (!this.runtime.isCocoonJs)
 			return;
-		
+
 		CocoonJS["Store"]["purchaseProduct"](productid);
 	};
 
@@ -488,7 +510,7 @@ cr.plugins_.CJSAds = function(runtime)
 	{
 		if (!this.runtime.isCocoonJs)
 			return;
-		
+
 		var typestr = ["text", "num", "phone", "email", "url"][type_];
 		
 		CocoonJS["App"]["showTextDialog"](title_, message_, initial_, typestr, canceltext_, oktext_);
@@ -504,51 +526,149 @@ cr.plugins_.CJSAds = function(runtime)
 		
 		products_list = CocoonJS["Store"]["getProducts"]();
 	};
-	
-	Acts.prototype.GCLogin = function ()
+
+	/**
+	* Social service actions
+	*/
+	function socialServiceRequestLoginCallback(isAuthenticated, error){
+		if(isAuthenticated){
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceLoginSuccess, self);
+		}else{
+			console.log(error);
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceOpenLeaderBoardClosed, self);
+		}
+	};
+
+	Acts.prototype.socialServiceRequestLogin = function ()
 	{
-		if (!this.socialServiceAvailable || this.socialService["isLoggedIn"]())
-			return;
-		
-		this.socialService["requestLogin"]();
+		if(this.socialServiceInterface.isLoggedIn()){
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceLoginSuccess, self);
+		}else{
+			this.socialServiceInterface.login(socialServiceRequestLoginCallback);
+		}
+	};
+
+	Acts.prototype.socialServiceRequestLogout = function ()
+	{
+		if(this.socialServiceInterface.isLoggedIn())
+			this.socialServiceInterface.logout(socialServiceRequestLoginCallback);
+	};
+	// IOS TicTacToe
+	// Android CgkIjMC3tPoHEAIQAg
+	function socialServiceSubmitScoreCallback(err){
+		if(!err){
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceSubmitScoreSuccess, self);
+		}else{
+			console.log(err);
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceSubmitScoreFailed, self);
+		}
+	};
+
+	Acts.prototype.socialServiceSubmitScore = function (score_, leaderboard_)
+	{
+		if(this.socialServiceInterface.isLoggedIn())
+			this.socialServiceInterface.submitScore(
+				score_,
+				socialServiceSubmitScoreCallback,
+				{ leaderboardID : leaderboard_ } 
+			);
 	};
 	
-	Acts.prototype.GCLogout = function ()
+	function socialServiceRequestScoreCallback(loadedScore, err){
+		if(!err){
+			requested_score = loadedScore.score || 0;
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceRequestScoreSuccess, self);
+		}else{
+			console.log(err);
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceRequestScoreFailed, self);
+		}
+	};
+
+	Acts.prototype.socialServiceRequestScore = function (leaderboard_)
 	{
-		if (!this.socialServiceAvailable || !this.socialService["isLoggedIn"]())
-			return;
-		
-		this.socialService["requestLogout"]();
+		if(this.socialServiceInterface.isLoggedIn())
+			this.socialServiceInterface.requestScore(
+				socialServiceRequestScoreCallback, 
+				{ leaderboardID : leaderboard_ } );
 	};
 	
-	Acts.prototype.GCSubmitScore = function (score_, leaderboard_)
-	{
-		if (!this.socialServiceAvailable || !this.socialService["isLoggedIn"]())
-			return;
-		
-		this.socialService["submitUserScore"](score_, leaderboard_);
+	function socialServiceOpenLeaderboardCallback(err){
+		if(err){
+			console.log(err);
+		}
+		self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceOpenLeaderBoardClosed, self);
 	};
-	
-	Acts.prototype.GCRequestScore = function (leaderboard_)
+
+	Acts.prototype.socialServiceOpenLeaderboard = function (leaderboard_)
 	{
-		if (!this.socialServiceAvailable || !this.socialService["isLoggedIn"]())
-			return;
-		
-		this.socialService["requestUserScore"](leaderboard_);
+		if(!this.socialServiceInterface.isLoggedIn()) return;
+		self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceOpenLeaderBoardSuccess, self);
+		this.socialServiceInterface.showLeaderboard(
+			socialServiceOpenLeaderboardCallback,
+			{ leaderboardID : leaderboard_}
+		);
 	};
-	
-	Acts.prototype.GCOpenLeaderboard = function (leaderboard_)
-	{
-		if (!this.socialServiceAvailable || !this.socialService["isLoggedIn"]())
-			return;
-		
-		this.socialService["showLeaderboardView"](leaderboard_);
+
+	function socialServiceOpenAchievementsCallback(err){
+		if(err){
+			console.log(err);
+		}
+		self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceOpenAchievementsClosed, self);
+	}
+
+	Acts.prototype.socialServiceOpenAchievements = function(){
+		if(!this.socialServiceInterface.isLoggedIn()) return;
+		self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceOpenAchievementsSuccess, self);
+		this.socialServiceInterface.showAchievements(socialServiceOpenAchievementsCallback);
 	};
-	
+
+	function socialServiceResetAchievementsCallback(err){
+		if(err){
+			try{
+				console.log(JSON.stringify(err));
+			}catch(e){
+				for(var prop in err){
+					console.log(err[prop]);
+				}
+				console.log(e);
+			}
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceResetAchievementsFailed, self);
+		}else{
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceResetAchievementsCompleted, self);
+		}
+	}
+
+	Acts.prototype.socialServiceResetAchievements = function(){
+		if(!this.socialServiceInterface.isLoggedIn()) return;
+		this.socialServiceInterface.resetAchievements(socialServiceResetAchievementsCallback);
+	};
+
+	function socialServiceSubmitAchievementCallback(err){
+		if(err){
+			try{
+				console.log(JSON.stringify(err));
+			}catch(e){
+				for(var prop in err){
+					console.log(err[prop]);
+				}
+				console.log(e);
+			}
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceSubmitAchievementFailed, self);
+		}else{
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceSubmitAchievementCompleted, self);
+		}
+	}
+
+	Acts.prototype.socialServiceSubmitAchievement = function(_achievementId){
+		if(!this.socialServiceInterface.isLoggedIn()) return;
+		this.socialServiceInterface.submitAchievement(_achievementId, socialServiceSubmitAchievementCallback);
+	};
+
 	pluginProto.acts = new Acts();
 	
-	//////////////////////////////////////
-	// Expressions
+	/**
+	* Expressions
+	*/
 	function Exps() {};
 	
 	Exps.prototype.InputText = function (ret)
@@ -639,11 +759,11 @@ cr.plugins_.CJSAds = function(runtime)
 		ret.set_string(products_list[index]["title"]);
 	};
 	
-	Exps.prototype.GameCenterScore = function (ret)
+	Exps.prototype.PlayerScore = function (ret)
 	{
 		ret.set_float(requested_score);
 	};
-	
+
 	pluginProto.exps = new Exps();
 	
 }());

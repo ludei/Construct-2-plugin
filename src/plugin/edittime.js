@@ -5,8 +5,8 @@ function GetPluginSettings()
 		"id":			"CJSAds",
 		"version":		"1.0",
 		"description":	"Access CocoonJS extensions like ads and in-app purchases.",
-		"author":		"Scirra",
-		"help url":		"http://wiki.ludei.com/Home",
+		"author":		"Scirra & Ludei",
+		"help url":		"http://www.ludei.com",
 		"category":		"Platform specific",
 		"type":			"object",			// not in layout
 		"rotatable":	false,
@@ -14,8 +14,9 @@ function GetPluginSettings()
 	};
 };
 
-//////////////////////////////////////////////////////////////
-// Conditions
+/**
+* Conditions
+*/
 AddCondition(0, 0, "Is showing banner ad", "Ads", "Is showing banner ad", "True if currently showing a banner ad.", "IsShowingBanner");
 AddCondition(1, 0, "Is in CocoonJS", "CocoonJS", "Is in CocoonJS", "True if currently running on the CocoonJS platform.", "IsCocoonJS");
 AddCondition(2, cf_trigger, "On banner shown", "Ads", "On banner shown", "Triggered when a banner ad is shown.", "OnBannerShown");
@@ -41,38 +42,46 @@ AddCondition(11, cf_trigger, "On input cancelled", "Keyboard input", "On keyboar
 
 AddCondition(12, cf_trigger, "On input OK", "Keyboard input", "On keyboard input OK", "Triggered after opening a text input dialog which is then OK'd.", "OnKeyboardOK");
 
-AddCondition(13, 0, "Is available", "Game Center", "Is Game Center available", "Check if the Game Center service is available.", "IsGCAvailable");
+AddCondition(13, cf_trigger, "On products fetch completed", "In-app purchase", "On products fetch completed", "Triggered when all the products have been downloaded.", "onProductsFetchCompleted");
 
-AddCondition(14, 0, "Is logged in", "Game Center", "Is logged in to Game Center", "True if the user has successfully logged in to Game Center", "IsGCLoggedIn");
+AddCondition(14, cf_trigger, "On products fetch failed", "In-app purchase", "On products fetch failed", "Triggered when the fetch product function fails. ", "onProductsFetchFailed");
 
-AddCondition(15, cf_trigger, "On login succeeded", "Game Center", "On Game Center login succeeded", "Triggered when the user successfully completes a Game Center login.", "OnGCLoginSuccess");
+AddCondition(15, cf_trigger, "On products fetch started", "In-app purchase", "On products fetch started", "Triggered when the download of products starts.", "onProductsFetchStarted");
 
-AddCondition(16, cf_trigger, "On login failed", "Game Center", "On Game Center login failed", "Triggered when the user fails to complete a Game Center login.", "OnGCLoginFail");
+AddCondition(16, cf_trigger, "On consume purchase failed", "In-app purchase", "On consume purchase failed", "Triggered when the purchase has failed.", "onConsumePurchaseFailed");
 
-AddCondition(17, cf_trigger, "On score received", "Game Center", "On score received", "Triggered after requesting a score completes successfully.", "OnGCScoreReceived");
+// Social service callbacks
+AddCondition(17, cf_trigger, "On login succeeded", "Social", "On Login succeeded", "Triggered when the user has logged into the social service.", "onSocialServiceLoginSuccess");
 
-AddCondition(18, cf_trigger, "On score unavailable", "Game Center", "On score unavailable", "Triggered after requesting a score fails to complete successfully.", "OnGCScoreUnavailable");
+AddCondition(18, cf_trigger, "On login failed", "Social", "On Login Failed", "Triggered if the login of the social service has failed.", "onSocialServiceLoginFailed");
 
-AddCondition(19, cf_trigger, "On score submit success", "Game Center", "On score submit success", "Triggered after submitting a score completes successfully.", "OnGCScoreSubmitSuccess");
+AddCondition(19, cf_trigger, "On score submit success", "Leaderboards", "On score submit success", "Triggered after submitting a score completes successfully", "onSocialServiceSubmitScoreSuccess");
 
-AddCondition(20, cf_trigger, "On score submit fail", "Game Center", "On score submit fail", "Triggered after submitting a score fails to complete successfully.", "OnGCScoreSubmitFail");
+AddCondition(20, cf_trigger, "On score submit failed", "Leaderboards", "On score submit failed", "Triggered after submitting a score fails to complete successfully.", "onSocialServiceSubmitScoreFailed");
 
-AddCondition(21, cf_trigger, "On leaderboard view opened", "Game Center", "On leaderboard view opened", "Triggered when the leaderboard view opens successfully.", "OnGCLeaderboardOpen");
+AddCondition(21, cf_trigger, "On request score success", "Leaderboards", "On request score success", "Triggered after requesting a score completes successfully.", "onSocialServiceRequestScoreSuccess");
 
-AddCondition(22, cf_trigger, "On leaderboard view closed", "Game Center", "On leaderboard view closed", "Triggered when the leaderboard view is closed by the user.", "OnGCLeaderboardClose");
+AddCondition(22, cf_trigger, "On request score failed", "Leaderboards", "On request score failed", "Triggered after requesting a score fails to complete successfully.", "onSocialServiceRequestScoreFailed");
 
-AddCondition(23, cf_trigger, "On logout", "Game Center", "On Game Center logout", "Triggered when the user logs out from Game Center.", "OnGCLogout");
+AddCondition(23, cf_trigger, "On Leaderboard Open", "Leaderboards", "On leaderboard view opened", "Triggered when the leaderboard view opens successfully.", "onSocialServiceOpenLeaderBoardSuccess");
 
-AddCondition(24, cf_trigger, "On products fetch completed", "In-app purchase", "On products fetch completed", "Triggered when all the products have been downloaded.", "onProductsFetchCompleted");
+AddCondition(24, cf_trigger, "On Leaderboard Closed", "Leaderboards", "On leaderboard view closed", "Triggered when the leaderboard view is closed by the user.", "onSocialServiceOpenLeaderBoardClosed");
 
-AddCondition(25, cf_trigger, "On products fetch failed", "In-app purchase", "On products fetch failed", "Triggered when the fetch product function fails. ", "onProductsFetchFailed");
+AddCondition(25, cf_trigger, "On Achievements view closed", "Achievements", "On Achievements view closed", "Triggered when the Achievements view is closed by the user.", "onSocialServiceOpenAchievementsClosed");
 
-AddCondition(26, cf_trigger, "On products fetch started", "In-app purchase", "On products fetch started", "Triggered when the download of products starts.", "onProductsFetchStarted");
+AddCondition(26, cf_trigger, "On Achievements view Open", "Achievements", "On Achievements view open", "Triggered when the Achievements view is open by the user.", "onSocialServiceOpenAchievementsSuccess");
 
-AddCondition(27, cf_trigger, "On consume purchase failed", "In-app purchase", "On consume purchase failed", "Triggered when the purchase has failed.", "onConsumePurchaseFailed");
+AddCondition(27, cf_trigger, "On Reset Achievements completed", "Achievements", "On Reset Achievements completed", "Triggered when the achievements have been reset.", "onSocialServiceResetAchievementsCompleted");
 
-//////////////////////////////////////////////////////////////
-// Actions
+AddCondition(28, cf_trigger, "On Reset Achievements failed", "Achievements", "On Reset Achievements failed", "Triggered if something fails when trying to reset the achievements", "onSocialServiceResetAchievementsFailed");
+
+AddCondition(29, cf_trigger, "On submit achievement success", "Achievements", "On submit achievement success", "Triggered when the achievement has been correctly.", "onSocialServiceSubmitAchievementCompleted");
+
+AddCondition(30, cf_trigger, "On submit achievement failed", "Achievements", "On submit achievement failed", "Triggered if something fails when trying to submit an achievement", "onSocialServiceSubmitAchievementFailed");
+
+/**
+* Actions
+*/
 AddComboParamOption("top center");
 AddComboParamOption("bottom center");
 AddComboParam("Layout", "Choose where the banner ad will appear.");
@@ -108,31 +117,36 @@ AddAction(8, 0, "Prompt text input", "Keyboard input", "Prompt text input (title
 
 AddAction(9, 0, "Update products list", "In-app purchase", "Update products list", "Update the list of products returned by the product information expressions.", "UpdateProductsList");
 
-AddAction(10, 0, "Request login", "Game Center", "Request login", "Request the user to log in to Game Center.", "GCLogin");
+AddAction(10, 0, "Refresh banner", "Ads", "Refresh banner", "Replace a currently showing banner with a new ad.", "RefreshBanner");
+
+AddAction(11, 0, "Refresh fullscreen ad", "Ads", "Refresh fullscreen ad", "Replace a currently showing fullscreen ad with a new ad.", "RefreshFullscreen");
+
+AddStringParam("Product list", 'The product list followed by commas of products IDs that you want to fetch from store server, example: "remove.ads,buy.coins,buy.magical.sword"');
+AddAction(12, 0, "Fetch products from store", "In-app purchase", "Fetch those products from store: <i>{0}</i>", "Fetch products from store", "fetchProductsFromStore");
+
+// Social service actions
+AddAction(14, 0, "Request login", "Social", "Request login", "", "socialServiceRequestLogin");
 
 AddNumberParam("Score", "The score to submit to Game Center.");
 AddStringParam("Leaderboard", "The name of the leaderboard to submit to, e.g. \"My Game Name\"");
-AddAction(11, 0, "Submit score", "Game Center", "Submit score of <i>{0}</i> to Game Center leaderboard <i>{1}</i>", "Submit a score to Game Center.", "GCSubmitScore");
+AddAction(15, 0, "Submit score", "Leaderboards", "Submit score of <i>{0}</i> to the specified leaderboard <i>{1}</i>", "Submit a score to the specified leaderboard.", "socialServiceSubmitScore");
 
 AddStringParam("Leaderboard", "The name of the leaderboard to retrieve from, e.g. \"My Game Name\"");
-AddAction(12, 0, "Request user score", "Game Center", "Request user score from leaderboard <i>{0}</i>", "Request the user's current best score from Game Center", "GCRequestScore");
+AddAction(16, 0, "Request player score", "Leaderboards", "Request player score", "Requests the user score from the <i>{0}</i> leaderboard", "socialServiceRequestScore");
 
-AddStringParam("Leaderboard", "The name of the leaderboard to open, e.g. \"My Game Name\"");
-AddAction(13, 0, "Open leaderboard view", "Game Center", "Open Game Center leaderboard <i>{0}</i> view", "Open the Game Center leaderboard view.", "GCOpenLeaderboard");
+AddStringParam("Leaderboard", "The name of the leaderboard to be openned, e.g. \"My Game Name\"");
+AddAction(17, 0, "Open Leaderboard", "Leaderboards", "Open Leaderboard", "Opens the given leaderboard", "socialServiceOpenLeaderboard");
 
-AddAction(14, 0, "Request logout", "Game Center", "Request logout", "Request the user to log out of Game Center.", "GCLogout");
+AddAction(18, 0, "Show Achievements", "Achievements", "Show Achievements", "Shows the achievements window", "socialServiceOpenAchievements");
 
-AddAction(15, 0, "Refresh banner", "Ads", "Refresh banner", "Replace a currently showing banner with a new ad.", "RefreshBanner");
+AddAction(19, 0, "Reset Achievements", "Achievements", "Reset Achievements", "Resets the achievements", "socialServiceResetAchievements");
 
-AddAction(16, 0, "Refresh fullscreen ad", "Ads", "Refresh fullscreen ad", "Replace a currently showing fullscreen ad with a new ad.", "RefreshFullscreen");
+AddStringParam("Achievement ID", "The ID of the achievement to be sent");
+AddAction(20, 0, "Submit Achievement", "Achievements", "Submit Achievement", "Submits an achievement", "socialServiceSubmitAchievement");
 
-AddStringParam("Product list", 'The product list followed by commas of products IDs that you want to fetch from store server, example: "remove.ads,buy.coins,buy.magical.sword"');
-AddAction(17, 0, "Fetch products from store", "In-app purchase", "Fetch those products from store: <i>{0}</i>", "Fetch products from store", "fetchProductsFromStore");
-
-AddAction(18, 0, "Restore purchases", "In-app purchase", "Restore purchases", "Restoring the purchases is the way of returning purchased items information from the platform Store. ", "restorePurchases");
-
-//////////////////////////////////////////////////////////////
-// Expressions
+/**
+* Expressions
+*/
 AddExpression(0, ef_return_string, "", "Keyboard input", "InputText", "In 'On input OK', get the text entered.");
 
 AddExpression(1, ef_return_number, "", "In-app purchase", "ProductCount", "Return the number of products available for purchase.");
@@ -155,15 +169,39 @@ AddExpression(6, ef_return_string, "", "In-app purchase", "ProductID", "Return t
 AddNumberParam("Index", "Zero-based index of product to get.");
 AddExpression(7, ef_return_string, "", "In-app purchase", "ProductTitle", "Return the title of the Nth product.");
 
-AddExpression(8, ef_return_number, "", "Game Center", "GameCenterScore", "Return the score requested from Game Center.");
+AddExpression(8, ef_return_string, "", "Leaderboards", "PlayerScore", "Returns the current player score.");
 
 ACESDone();
 
-// Property grid properties for this plugin
+/**
+* Plugin properties
+*/
 var property_list = [
-	new cr.Property(ept_combo,	"Physics engine",				"Accelerated",		"Whether to use the CocoonJS accelerated physics engine or the standard web-based one.", "Accelerated|Standard web-based"),
-	new cr.Property(ept_combo,	"Store mode",			"Managed",		"Whether to use the store in managed mode (using Ludei's cloud service).", "Managed|Unmanaged"),
-	new cr.Property(ept_combo,	"Store sandbox",		"Enabled",			"Whether to use the store in sandbox mode (for testing).", "Disabled|Enabled")
+	new cr.Property(ept_combo,	
+		"Physics engine",
+		"Accelerated",
+		"Whether to use the CocoonJS accelerated physics engine or the standard web-based one.",
+		"Accelerated|Standard web-based"),
+	new cr.Property(ept_combo,	
+		"Store mode",
+		"Managed",
+		"Whether to use the store in managed mode (using Ludei's cloud service).", 
+		"Managed|Unmanaged"),
+	new cr.Property(ept_combo,	
+		"Leaderboards Service",	
+		"None",
+		"The service that will handle the leaderboards/achievements for your game", 
+		"None|Based on user operating system|GameCenter|Google Play Games"), // Facebook not available yet
+	new cr.Property(ept_combo,
+		"Store sandbox",
+		"Enabled",
+		"Whether to use the store in sandbox mode (for testing).", 
+		"Disabled|Enabled"),
+	new cr.Property(ept_text,
+		"Google Play Games ClientID",
+		"",
+		"The ClientID for Google Play Games (only for iOs when using Google Play Games)", 
+		"")
 	];
 	
 // Called by IDE when a new object type is to be created

@@ -3,12 +3,12 @@ CocoonJS Plugin for Construct 2
 This plugin can be used in Construct 2 to manage the CocoonJS JavaScript APIs.
 
 ## Demo Example [capx]
-This plugin comes with a .capx (a valid Construct 2 project) as a reference to know how to use it, you can download it from [here](capx/CocoonJS Plugin Demo.capx).
+This plugin comes with a .capx (a valid Construct 2 project) as a reference to know how to use it, you can download it from [here](capx/CocoonJS Plugin Demo.capx?raw=true).
 
 Here are some screenshots of the .capx:
 
 ![Demo](http://support.ludei.com/hc/en-us/article_attachments/200643378/Screen_Shot_2014-04-14_at_12.58.54.png)
-![Demo](http://support.ludei.com/hc/en-us/article_attachments/200619886/social_actions.png)
+![Demo](http://support.ludei.com/hc/en-us/article_attachments/200697397/social_actions.png)
 ![Demo](http://support.ludei.com/hc/en-us/article_attachments/200694983/social_login_leaderboard.png)
 
 ## Configuration

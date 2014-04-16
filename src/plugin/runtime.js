@@ -20,7 +20,7 @@ cr.plugins_.CJSAds = function(runtime)
 	var input_text = "";
 	var products_list = [];
 	var requested_score = 0;
-	
+	var showBanner = true;
 	var bannerPosition = 0;
 	var preloadingBanner = false;
 	var bannerReady = false;
@@ -92,8 +92,10 @@ cr.plugins_.CJSAds = function(runtime)
 				
 				if (!preloadingBanner)
 				{
-					CocoonJS["Ad"]["setBannerLayout"](bannerPosition);
-					CocoonJS["Ad"]["showBanner"]();
+					if(showBanner){
+						CocoonJS["Ad"]["setBannerLayout"](bannerPosition);
+						CocoonJS["Ad"]["showBanner"]();
+					}
 				}
 			});
 			
@@ -406,6 +408,7 @@ cr.plugins_.CJSAds = function(runtime)
 		
 		if (bannerReady)
 		{
+			showBanner = true;
 			CocoonJS["Ad"]["setBannerLayout"](bannerPosition);
 			CocoonJS["Ad"]["showBanner"]();
 		}
@@ -432,7 +435,7 @@ cr.plugins_.CJSAds = function(runtime)
 	{
 		if (!this.runtime.isCocoonJs)
 			return;
-		
+		showBanner = false;
 		CocoonJS["Ad"]["hideBanner"]();
 		this.isShowingBanner = false;
 	};

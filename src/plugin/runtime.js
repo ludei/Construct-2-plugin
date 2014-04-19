@@ -190,7 +190,7 @@ cr.plugins_.CJSAds = function(runtime)
 			/*l
 			* Set the social interface for the selected service
 			*/
-			function startGameCenter(){
+			this.startGameCenter = function(){
 				console.log("GameCenter selected as social service");
 				this.socialService = CocoonJS["Social"]["GameCenter"];
 				if(this.socialService){
@@ -201,7 +201,7 @@ cr.plugins_.CJSAds = function(runtime)
 				}
 			}
 
-			function startGooglePlay(){
+			this.startGooglePlay = function(){
 				console.log("GooglePlayGames selected as social service");
 				this.socialService = CocoonJS["Social"]["GooglePlayGames"];
 				if(this.socialService){
@@ -218,15 +218,15 @@ cr.plugins_.CJSAds = function(runtime)
 				}
 			}
 			
-			if(this.socialServiceSelected === 2) startGameCenter.apply(this,[]);
+			if(this.socialServiceSelected === 2) this.startGameCenter.apply(this,[]);
 
-			if(this.socialServiceSelected === 3) startGooglePlay.apply(this,[]);
+			if(this.socialServiceSelected === 3) this.startGooglePlay.apply(this,[]);
 
 			if(this.socialServiceSelected === 1){
 				if(CocoonJS["Social"]["GooglePlayGames"]["nativeExtensionObjectAvailable"]){
-					startGooglePlay.apply(this,[]);
+					this.startGooglePlay.apply(this,[]);
 				}else if(CocoonJS["Social"]["GameCenter"]["nativeExtensionObjectAvailable"]){
-					startGameCenter.apply(this,[]);
+					this.startGameCenter.apply(this,[]);
 				}else{
 					return;
 				}

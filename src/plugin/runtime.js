@@ -541,17 +541,24 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceRequestLogin = function ()
 	{
-		if(this.socialServiceInterface.isLoggedIn()){
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");			
+			return;
+		} else if(this.socialServiceInterface.isLoggedIn()){
 			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceLoginSuccess, self);
-		}else{
+		} else {
 			this.socialServiceInterface.login(socialServiceRequestLoginCallback);
-		}
+		}		
 	};
 
 	Acts.prototype.socialServiceRequestLogout = function ()
 	{
-		if(this.socialServiceInterface.isLoggedIn())
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		} else if(this.socialServiceInterface.isLoggedIn()) {
 			this.socialServiceInterface.logout(socialServiceRequestLoginCallback);
+		}	
 	};
 	// IOS TicTacToe
 	// Android CgkIjMC3tPoHEAIQAg
@@ -566,12 +573,16 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceSubmitScore = function (score_, leaderboard_)
 	{
-		if(this.socialServiceInterface.isLoggedIn())
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		} else if(this.socialServiceInterface.isLoggedIn()) {
 			this.socialServiceInterface.submitScore(
 				score_,
 				socialServiceSubmitScoreCallback,
 				{ leaderboardID : leaderboard_ } 
 			);
+		}
 	};
 	
 	function socialServiceRequestScoreCallback(loadedScore, err){
@@ -586,10 +597,14 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceRequestScore = function (leaderboard_)
 	{
-		if(this.socialServiceInterface.isLoggedIn())
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		} else if(this.socialServiceInterface.isLoggedIn()) {
 			this.socialServiceInterface.requestScore(
 				socialServiceRequestScoreCallback, 
 				{ leaderboardID : leaderboard_ } );
+		}
 	};
 	
 	function socialServiceOpenLeaderboardCallback(err){
@@ -601,6 +616,10 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceOpenLeaderboard = function (leaderboard_)
 	{
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		}
 		if(!this.socialServiceInterface.isLoggedIn()) return;
 		self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceOpenLeaderBoardSuccess, self);
 		this.socialServiceInterface.showLeaderboard(
@@ -617,6 +636,10 @@ cr.plugins_.CJSAds = function(runtime)
 	}
 
 	Acts.prototype.socialServiceOpenAchievements = function(){
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		}
 		if(!this.socialServiceInterface.isLoggedIn()) return;
 		self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceOpenAchievementsSuccess, self);
 		this.socialServiceInterface.showAchievements(socialServiceOpenAchievementsCallback);
@@ -639,6 +662,10 @@ cr.plugins_.CJSAds = function(runtime)
 	}
 
 	Acts.prototype.socialServiceResetAchievements = function(){
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		}
 		if(!this.socialServiceInterface.isLoggedIn()) return;
 		this.socialServiceInterface.resetAchievements(socialServiceResetAchievementsCallback);
 	};
@@ -660,6 +687,10 @@ cr.plugins_.CJSAds = function(runtime)
 	}
 
 	Acts.prototype.socialServiceSubmitAchievement = function(_achievementId){
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		}
 		if(!this.socialServiceInterface.isLoggedIn()) return;
 		this.socialServiceInterface.submitAchievement(_achievementId, socialServiceSubmitAchievementCallback);
 	};

@@ -203,6 +203,7 @@ cr.plugins_.CJSAds = function(runtime)
 
 			function startGooglePlay(){
 				console.log("GooglePlayGames selected as social service");
+				
 				this.socialService = CocoonJS["Social"]["GooglePlayGames"];
 				if(this.socialService){
 					var config = {};

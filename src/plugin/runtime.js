@@ -190,7 +190,7 @@ cr.plugins_.CJSAds = function(runtime)
 			/*l
 			* Set the social interface for the selected service
 			*/
-			function startGameCenter(){
+			this.startGameCenter = function(){
 				console.log("GameCenter selected as social service");
 				this.socialService = CocoonJS["Social"]["GameCenter"];
 				if(this.socialService){
@@ -201,7 +201,7 @@ cr.plugins_.CJSAds = function(runtime)
 				}
 			}
 
-			function startGooglePlay(){
+			this.startGooglePlay = function(){
 				console.log("GooglePlayGames selected as social service");
 				
 				this.socialService = CocoonJS["Social"]["GooglePlayGames"];
@@ -219,15 +219,15 @@ cr.plugins_.CJSAds = function(runtime)
 				}
 			}
 			
-			if(this.socialServiceSelected === 2) startGameCenter.apply(this,[]);
+			if(this.socialServiceSelected === 2) this.startGameCenter.apply(this,[]);
 
-			if(this.socialServiceSelected === 3) startGooglePlay.apply(this,[]);
+			if(this.socialServiceSelected === 3) this.startGooglePlay.apply(this,[]);
 
 			if(this.socialServiceSelected === 1){
 				if(CocoonJS["Social"]["GooglePlayGames"]["nativeExtensionObjectAvailable"]){
-					startGooglePlay.apply(this,[]);
+					this.startGooglePlay.apply(this,[]);
 				}else if(CocoonJS["Social"]["GameCenter"]["nativeExtensionObjectAvailable"]){
-					startGameCenter.apply(this,[]);
+					this.startGameCenter.apply(this,[]);
 				}else{
 					return;
 				}
@@ -542,17 +542,24 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceRequestLogin = function ()
 	{
-		if(this.socialServiceInterface.isLoggedIn()){
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");			
+			return;
+		} else if(this.socialServiceInterface.isLoggedIn()){
 			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceLoginSuccess, self);
-		}else{
+		} else {
 			this.socialServiceInterface.login(socialServiceRequestLoginCallback);
-		}
+		}		
 	};
 
 	Acts.prototype.socialServiceRequestLogout = function ()
 	{
-		if(this.socialServiceInterface.isLoggedIn())
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		} else if(this.socialServiceInterface.isLoggedIn()) {
 			this.socialServiceInterface.logout(socialServiceRequestLoginCallback);
+		}	
 	};
 	// IOS TicTacToe
 	// Android CgkIjMC3tPoHEAIQAg
@@ -567,12 +574,16 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceSubmitScore = function (score_, leaderboard_)
 	{
-		if(this.socialServiceInterface.isLoggedIn())
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		} else if(this.socialServiceInterface.isLoggedIn()) {
 			this.socialServiceInterface.submitScore(
 				score_,
 				socialServiceSubmitScoreCallback,
 				{ leaderboardID : leaderboard_ } 
 			);
+		}
 	};
 	
 	function socialServiceRequestScoreCallback(loadedScore, err){
@@ -587,10 +598,14 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceRequestScore = function (leaderboard_)
 	{
-		if(this.socialServiceInterface.isLoggedIn())
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		} else if(this.socialServiceInterface.isLoggedIn()) {
 			this.socialServiceInterface.requestScore(
 				socialServiceRequestScoreCallback, 
 				{ leaderboardID : leaderboard_ } );
+		}
 	};
 	
 	function socialServiceOpenLeaderboardCallback(err){
@@ -602,6 +617,10 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceOpenLeaderboard = function (leaderboard_)
 	{
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		}
 		if(!this.socialServiceInterface.isLoggedIn()) return;
 		self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceOpenLeaderBoardSuccess, self);
 		this.socialServiceInterface.showLeaderboard(
@@ -618,6 +637,10 @@ cr.plugins_.CJSAds = function(runtime)
 	}
 
 	Acts.prototype.socialServiceOpenAchievements = function(){
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		}
 		if(!this.socialServiceInterface.isLoggedIn()) return;
 		self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceOpenAchievementsSuccess, self);
 		this.socialServiceInterface.showAchievements(socialServiceOpenAchievementsCallback);
@@ -640,6 +663,10 @@ cr.plugins_.CJSAds = function(runtime)
 	}
 
 	Acts.prototype.socialServiceResetAchievements = function(){
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		}
 		if(!this.socialServiceInterface.isLoggedIn()) return;
 		this.socialServiceInterface.resetAchievements(socialServiceResetAchievementsCallback);
 	};
@@ -661,6 +688,10 @@ cr.plugins_.CJSAds = function(runtime)
 	}
 
 	Acts.prototype.socialServiceSubmitAchievement = function(_achievementId){
+		if (this.socialServiceInterface === undefined) {
+			console.log("Social service is not available in non-CocoonJS platform.");
+			return;
+		}
 		if(!this.socialServiceInterface.isLoggedIn()) return;
 		this.socialServiceInterface.submitAchievement(_achievementId, socialServiceSubmitAchievementCallback);
 	};

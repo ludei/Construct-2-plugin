@@ -80,6 +80,10 @@ AddCondition(29, cf_trigger, "On submit achievement success", "Achievements", "O
 
 AddCondition(30, cf_trigger, "On submit achievement failed", "Achievements", "On submit achievement failed", "Triggered if something fails when trying to submit an achievement", "onSocialServiceSubmitAchievementFailed");
 
+AddCondition(31, cf_trigger, "On banner ready", "Ads", "On banner ready", "Triggered when a new banner ad is cached", "onBannerReady");
+
+AddCondition(32, cf_trigger, "On fullscreen ready", "Ads", "On fullscreen ready", "Triggered when a new interstitial ad is cached", "onFullScreenReady");
+
 /**
 * Actions
 */
@@ -120,7 +124,7 @@ AddAction(9, 0, "Update products list", "In-app purchase", "Update products list
 
 AddAction(10, 0, "Refresh banner", "Ads", "Refresh banner", "Replace a currently showing banner with a new ad.", "RefreshBanner");
 
-AddAction(11, 0, "Refresh fullscreen ad", "Ads", "Refresh fullscreen ad", "Replace a currently showing fullscreen ad with a new ad.", "RefreshFullscreen");
+AddAction(11, 0, "Refresh fullscreen ad", "Ads", "Refresh fullscreen ad", "Replace a currently showing fullscreen ad with a new ad.", "RefreshFullScreen");
 
 AddStringParam("Product list", 'The product list followed by commas of products IDs that you want to fetch from store server, example: "remove.ads,buy.coins,buy.magical.sword"');
 AddAction(12, 0, "Fetch products from store", "In-app purchase", "Fetch those products from store: <i>{0}</i>", "Fetch products from store", "fetchProductsFromStore");
@@ -178,33 +182,33 @@ ACESDone();
 * Plugin properties
 */
 var property_list = [
-	new cr.Property(ept_combo,	
+	new cr.Property(ept_combo,
 		"Physics engine",
 		"Accelerated",
 		"Whether to use the CocoonJS accelerated physics engine or the standard web-based one.",
 		"Accelerated|Standard web-based"),
-	new cr.Property(ept_combo,	
+	new cr.Property(ept_combo,
 		"Store mode",
 		"Managed",
-		"Whether to use the store in managed mode (using Ludei's cloud service).", 
+		"Whether to use the store in managed mode (using Ludei's cloud service).",
 		"Managed|Unmanaged"),
-	new cr.Property(ept_combo,	
-		"Leaderboards Service",	
+	new cr.Property(ept_combo,
+		"Leaderboards Service",
 		"None",
-		"The service that will handle the leaderboards/achievements for your game", 
+		"The service that will handle the leaderboards/achievements for your game",
 		"None|Based on user operating system|GameCenter|Google Play Games"), // Facebook not available yet
 	new cr.Property(ept_combo,
 		"Store sandbox",
 		"Enabled",
-		"Whether to use the store in sandbox mode (for testing).", 
+		"Whether to use the store in sandbox mode (for testing).",
 		"Disabled|Enabled"),
 	new cr.Property(ept_text,
 		"Google Play Games ClientID",
 		"",
-		"The ClientID for Google Play Games (only for iOs when using Google Play Games)", 
+		"The ClientID for Google Play Games (only for iOs when using Google Play Games)",
 		"")
 	];
-	
+
 // Called by IDE when a new object type is to be created
 function CreateIDEObjectType()
 {
@@ -227,14 +231,14 @@ IDEObjectType.prototype.CreateInstance = function(instance)
 function IDEInstance(instance, type)
 {
 	assert2(this instanceof arguments.callee, "Constructor called as a function");
-	
+
 	// Save the constructor parameters
 	this.instance = instance;
 	this.type = type;
-	
+
 	// Set the default property values from the property table
 	this.properties = {};
-	
+
 	for (var i = 0; i < property_list.length; i++)
 		this.properties[property_list[i].name] = property_list[i].initial_value;
 }
@@ -248,7 +252,7 @@ IDEInstance.prototype.OnCreate = function()
 IDEInstance.prototype.OnPropertyChanged = function(property_name)
 {
 }
-	
+
 // Called by the IDE to draw this instance in the editor
 IDEInstance.prototype.Draw = function(renderer)
 {

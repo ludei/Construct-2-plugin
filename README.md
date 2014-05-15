@@ -29,12 +29,18 @@ This plugin already comes bundled with Construct 2, however the update rate of C
 Visit [our help center](https://support.ludei.com).
 ## Changelog
 
-### April 16, 2014 
+### May 15, 2014
+* Fixed "RefreshFullScreen" typo.
+* Fixed error that causes an alert in strict mode
+* Added 2 missing methods of the ads service (onBannerReady/onFullScreenReady)
+* Updated .capx with ads section
+
+### April 16, 2014
 * Fixed bug that shows a banner when should not
 * Updated readme.md
 * Updated folder structure
 
-### April 14, 2014 
+### April 14, 2014
 * Added support for Google Play Games / Game Center leaderboards & Achievements
 * Fixed bug that prevents the user to finish a in-app purchase.
 * Updated documentation

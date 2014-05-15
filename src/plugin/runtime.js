@@ -22,9 +22,7 @@ cr.plugins_.CJSAds = function(runtime)
 	var requested_score = 0;
 	var showBanner = true;
 	var bannerPosition = 0;
-	var preloadingBanner = false;
 	var bannerReady = false;
-	var preloadingFullscreen = false;
 	var fullscreenReady = false;
 	
 	var pluginProto = cr.plugins_.CJSAds.prototype;
@@ -89,14 +87,7 @@ cr.plugins_.CJSAds = function(runtime)
 			CocoonJS["Ad"]["onBannerReady"].addEventListener(function ()
 			{
 				bannerReady = true;
-				
-				if (!preloadingBanner)
-				{
-					if(showBanner){
-						CocoonJS["Ad"]["setBannerLayout"](bannerPosition);
-						CocoonJS["Ad"]["showBanner"]();
-					}
-				}
+				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onBannerReady, self);
 			});
 			
 			CocoonJS["Ad"]["onFullScreenShown"].addEventListener(function ()
@@ -114,9 +105,7 @@ cr.plugins_.CJSAds = function(runtime)
 			CocoonJS["Ad"]["onFullScreenReady"].addEventListener(function ()
 			{
 				fullscreenReady = true;
-				
-				if (!preloadFullScreen)
-					CocoonJS["Ad"]["showFullScreen"]();
+				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onFullScreenReady, self);
 			});
 			
 			if (this.storeServiceAvailable)
@@ -187,10 +176,10 @@ cr.plugins_.CJSAds = function(runtime)
 			*/
 			if(this.socialServiceSelected === 0) return;
 
-			/*l
+			/**
 			* Set the social interface for the selected service
 			*/
-			function startGameCenter(){
+			this.startGameCenter = function(){
 				console.log("GameCenter selected as social service");
 				this.socialService = CocoonJS["Social"]["GameCenter"];
 				if(this.socialService){
@@ -201,7 +190,7 @@ cr.plugins_.CJSAds = function(runtime)
 				}
 			}
 
-			function startGooglePlay(){
+			this.startGooglePlay = function(){
 				console.log("GooglePlayGames selected as social service");
 				
 				this.socialService = CocoonJS["Social"]["GooglePlayGames"];
@@ -219,15 +208,15 @@ cr.plugins_.CJSAds = function(runtime)
 				}
 			}
 			
-			if(this.socialServiceSelected === 2) startGameCenter.apply(this,[]);
+			if(this.socialServiceSelected === 2) this.startGameCenter.apply(this,[]);
 
-			if(this.socialServiceSelected === 3) startGooglePlay.apply(this,[]);
+			if(this.socialServiceSelected === 3) this.startGooglePlay.apply(this,[]);
 
 			if(this.socialServiceSelected === 1){
 				if(CocoonJS["Social"]["GooglePlayGames"]["nativeExtensionObjectAvailable"]){
-					startGooglePlay.apply(this,[]);
+					this.startGooglePlay.apply(this,[]);
 				}else if(CocoonJS["Social"]["GameCenter"]["nativeExtensionObjectAvailable"]){
-					startGameCenter.apply(this,[]);
+					this.startGameCenter.apply(this,[]);
 				}else{
 					return;
 				}
@@ -264,11 +253,25 @@ cr.plugins_.CJSAds = function(runtime)
 	{
 		return true;
 	};
+
+	Cnds.prototype.onFullScreenReady = function ()
+	{
+		return true;
+	};
+
+	Cnds.prototype.onBannerReady = function ()
+	{
+		return true;
+	};
 	
 	Cnds.prototype.IsShowingFullscreen = function ()
 	{
 		return this.isShowingFullscreen;
 	};
+
+	Cnds.prototype.PreloadFullscreen = function(){
+		return true;
+	}
 	
 	Cnds.prototype.IsStoreAvailable = function ()
 	{
@@ -405,7 +408,6 @@ cr.plugins_.CJSAds = function(runtime)
 			return;
 		
 		bannerPosition = (layout_ === 0 ? CocoonJS["Ad"]["BannerLayout"]["TOP_CENTER"] : CocoonJS["Ad"]["BannerLayout"]["BOTTOM_CENTER"]);
-		preloadingBanner = false;
 		
 		if (bannerReady)
 		{
@@ -446,7 +448,6 @@ cr.plugins_.CJSAds = function(runtime)
 		if (!this.runtime.isCocoonJs)
 			return;
 		
-		preloadingBanner = true;
 		CocoonJS["Ad"]["preloadBanner"]();
 	};
 	
@@ -455,7 +456,6 @@ cr.plugins_.CJSAds = function(runtime)
 		if (!this.runtime.isCocoonJs)
 			return;
 		
-		preloadingFullscreen = true;
 		CocoonJS["Ad"]["preloadFullScreen"]();
 	};
 	
@@ -542,6 +542,8 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceRequestLogin = function ()
 	{
+		if(!this.socialServiceInterface) return;
+
 		if(this.socialServiceInterface.isLoggedIn()){
 			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceLoginSuccess, self);
 		}else{
@@ -551,6 +553,8 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceRequestLogout = function ()
 	{
+		if(!this.socialServiceInterface) return;
+		
 		if(this.socialServiceInterface.isLoggedIn())
 			this.socialServiceInterface.logout(socialServiceRequestLoginCallback);
 	};
@@ -567,6 +571,8 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceSubmitScore = function (score_, leaderboard_)
 	{
+		if(!this.socialServiceInterface) return;
+
 		if(this.socialServiceInterface.isLoggedIn())
 			this.socialServiceInterface.submitScore(
 				score_,
@@ -587,6 +593,8 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceRequestScore = function (leaderboard_)
 	{
+		if(!this.socialServiceInterface) return;
+
 		if(this.socialServiceInterface.isLoggedIn())
 			this.socialServiceInterface.requestScore(
 				socialServiceRequestScoreCallback, 
@@ -602,6 +610,8 @@ cr.plugins_.CJSAds = function(runtime)
 
 	Acts.prototype.socialServiceOpenLeaderboard = function (leaderboard_)
 	{
+		if(!this.socialServiceInterface) return;
+
 		if(!this.socialServiceInterface.isLoggedIn()) return;
 		self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceOpenLeaderBoardSuccess, self);
 		this.socialServiceInterface.showLeaderboard(
@@ -618,6 +628,8 @@ cr.plugins_.CJSAds = function(runtime)
 	}
 
 	Acts.prototype.socialServiceOpenAchievements = function(){
+		if(!this.socialServiceInterface) return;
+
 		if(!this.socialServiceInterface.isLoggedIn()) return;
 		self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceOpenAchievementsSuccess, self);
 		this.socialServiceInterface.showAchievements(socialServiceOpenAchievementsCallback);
@@ -640,6 +652,8 @@ cr.plugins_.CJSAds = function(runtime)
 	}
 
 	Acts.prototype.socialServiceResetAchievements = function(){
+		if(!this.socialServiceInterface) return;
+
 		if(!this.socialServiceInterface.isLoggedIn()) return;
 		this.socialServiceInterface.resetAchievements(socialServiceResetAchievementsCallback);
 	};
@@ -661,6 +675,8 @@ cr.plugins_.CJSAds = function(runtime)
 	}
 
 	Acts.prototype.socialServiceSubmitAchievement = function(_achievementId){
+		if(!this.socialServiceInterface) return;
+
 		if(!this.socialServiceInterface.isLoggedIn()) return;
 		this.socialServiceInterface.submitAchievement(_achievementId, socialServiceSubmitAchievementCallback);
 	};

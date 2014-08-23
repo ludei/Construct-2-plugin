@@ -467,7 +467,7 @@ cr.plugins_.CJSAds = function(runtime)
 		CocoonJS["Ad"]["refreshBanner"]();
 	};
 	
-	Acts.prototype.RefreshFullScreen = function ()
+	Acts.prototype.RefreshFullscreen = function ()
 	{
 		if (!this.runtime.isCocoonJs)
 			return;

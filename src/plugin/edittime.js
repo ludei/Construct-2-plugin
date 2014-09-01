@@ -34,7 +34,7 @@ AddStringParam("Product ID", "A string identifying the product.");
 AddCondition(8, cf_trigger, "On purchase completed", "In-app purchase", "On <i>{0}</i> purchase completed", "Triggered when a purchase successfully completes.", "OnPurchaseComplete");
 
 AddStringParam("Product ID", "A string identifying the product.");
-AddCondition(9, cf_trigger, "On purchase failed", "In-app purchase", "On <i>{0}</i> purchase failed", "Triggered when a purchase ends unsuccessfully.", "OnPurchaseFail");
+AddCondition(9, cf_trigger, "On purchase failed", "In-app purchase", "On <i>{0}</i> purchase failed", "Triggered when a purchase fails.", "OnPurchaseFail");
 
 AddStringParam("Product ID", "A string identifying the product.");
 AddCondition(10, 0, "Is product purchased", "In-app purchase", "Is product <i>{0}</i> purchased", "Test if a particular product is purchased.", "IsProductPurchased");
@@ -49,7 +49,7 @@ AddCondition(14, cf_trigger, "On products fetch failed", "In-app purchase", "On 
 
 AddCondition(15, cf_trigger, "On products fetch started", "In-app purchase", "On products fetch started", "Triggered when the download of products starts.", "onProductsFetchStarted");
 
-AddCondition(16, cf_trigger, "On consume purchase failed", "In-app purchase", "On consume purchase failed", "Triggered when the purchase has failed.", "onConsumePurchaseFailed");
+AddCondition(16, cf_trigger, "On consume purchase failed", "In-app purchase", "On consume purchase failed", "Triggered when the consumption event has failed.", "onConsumePurchaseFailed");
 
 // Social service callbacks
 AddCondition(17, cf_trigger, "On login succeeded", "Social", "On Login succeeded", "Triggered when the user has logged into the social service.", "onSocialServiceLoginSuccess");
@@ -83,6 +83,16 @@ AddCondition(30, cf_trigger, "On submit achievement failed", "Achievements", "On
 AddCondition(31, cf_trigger, "On banner ready", "Ads", "On banner ready", "Triggered when a new banner ad is cached", "onBannerReady");
 
 AddCondition(32, cf_trigger, "On fullscreen ready", "Ads", "On fullscreen ready", "Triggered when a new interstitial ad is cached", "onFullScreenReady");
+
+AddCondition(33, cf_trigger, "On Restore Purchases Started", "In-app purchase", "On Restore Purchases Started", "Called when the purchase operation has started", "onRestorePurchasesStarted");
+
+AddCondition(34, cf_trigger, "On Restore Purchases Completed", "In-app purchase", "On Restore Purchases Completed", "Called when the purchase operation has completed", "onRestorePurchasesCompleted");
+
+AddCondition(35, cf_trigger, "On Restore Purchases Failed", "In-app purchase", "On Restore Purchases Failed", "Called if the purchase operation has failed", "onRestorePurchasesFailed");
+
+AddCondition(36, cf_trigger, "On Consume Purchase Completed", "In-app purchase", "On Consume Purchase Completed", "Triggered when the consumption event has been completed.", "onConsumePurchaseCompleted");
+
+AddCondition(37, cf_trigger, "On Consume Purchase Started", "In-app purchase", "On Consume Purchase Started", "Triggered when the consumption of a purchase starts.", "onConsumePurchaseStarted");
 
 /**
 * Actions
@@ -149,6 +159,10 @@ AddAction(19, 0, "Reset Achievements", "Achievements", "Reset Achievements", "Re
 AddStringParam("Achievement ID", "The ID of the achievement to be sent");
 AddAction(20, 0, "Submit Achievement", "Achievements", "Submit Achievement", "Submits an achievement", "socialServiceSubmitAchievement");
 
+AddStringParam("Transaction Id", "The transaction id of the purchase you'd want to consume.");
+AddStringParam("Product id", "The product id of the purchase.");
+AddAction(21, 0, "Consume Purchase", "In-app purchase", "Consume Purchase", "Consumes a purchase", "ConsumePurchase");
+
 /**
 * Expressions
 */
@@ -175,6 +189,9 @@ AddNumberParam("Index", "Zero-based index of product to get.");
 AddExpression(7, ef_return_string, "", "In-app purchase", "ProductTitle", "Return the title of the Nth product.");
 
 AddExpression(8, ef_return_string, "", "Leaderboards", "PlayerScore", "Returns the current player score.");
+
+AddExpression(9, ef_return_string, "", "In-app purchase", "PurchaseProductId", "Returns the product id of the last purchased item.");
+AddExpression(10, ef_return_string, "", "In-app purchase", "PurchaseTransactionId", "Returns the transaction id of the last purchased item.");
 
 ACESDone();
 

@@ -1,4 +1,4 @@
-﻿/*! CocoonJSExtensions - v2.0.0 - 2014-04-10 www.ludei.com */(function() {
+/*! CocoonJSExtensions - v2.0.0 - 2014-07-23 www.ludei.com */(function() {
     // There should not be a CocoonJS object when this code is executed.
     // if (typeof window.CocoonJS !== 'undefined') throw("This is strange, a CocoonJS object already exists when trying to create it.");
 
@@ -467,8 +467,10 @@
                 return window.parent.eval(javaScriptCode);
             }
             else {
-                //return window.parent.frames['CocoonJS_App_ForCocoonJS_WebViewIFrame'].window.eval(javaScriptCode);
-                return window.frames['CocoonJS_App_ForCocoonJS_WebViewIFrame'].window.eval(javaScriptCode);
+                var frame = window.parent.frames['CocoonJS_App_ForCocoonJS_WebViewIFrame'];
+                if (frame) {
+                    return frame.window.eval(javaScriptCode);
+                }
             }
         }
     };
@@ -490,13 +492,19 @@
             }
         }
         else {
-            if (window.name == 'CocoonJS_App_ForCocoonJS_WebViewIFrame') {
-                return window.parent.eval(javaScriptCode);
-            }
-            else {
-                return window.parent.frames['CocoonJS_App_ForCocoonJS_WebViewIFrame'].window.eval(javaScriptCode);
-                // window.frames['CocoonJS_App_ForCocoonJS_WebViewIFrame'].window.eval(javaScriptCode);
-            }
+            setTimeout(function() {
+                var res;
+                if (window.name == 'CocoonJS_App_ForCocoonJS_WebViewIFrame') {
+                    res = window.parent.eval(javaScriptCode);
+                }
+                else {
+                    var frame = window.parent.frames['CocoonJS_App_ForCocoonJS_WebViewIFrame'];
+                    if (frame) {
+                        res = frame.window.eval(javaScriptCode);
+                    }
+                }
+                typeof(returnCallback) === "function" && returnCallback.call(this, res);
+            }, 1);
         }
     };
 
@@ -644,6 +652,20 @@
     }
 
     /**
+     * Opens a given share native window to share some specific text content in any system specific social sharing options. For example, Twitter, Facebook, SMS, Mail, ...
+     * @function
+     * @param {string} textToShare The text content that will be shared.
+     */
+    CocoonJS.App.share = function(textToShare) {
+        if (CocoonJS.App.nativeExtensionObjectAvailable) {
+            return CocoonJS.makeNativeExtensionObjectFunctionCall("IDTK_APP", "share", arguments, true);
+        }
+        else {
+            // TODO: Is there something we could do to share in a browser?
+        }
+    }
+
+    /**
      * Forces the app to be finished.
      * @function
      */
@@ -658,7 +680,7 @@
 
     /**
      * Enables or disables the auto lock to control if the screen keeps on after an inactivity period.
-     * When the auto lock is enabled and the application has no user input for a short period, the system puts the device into a "sleepâ€ state where the screen dims or turns off.
+     * When the auto lock is enabled and the application has no user input for a short period, the system puts the device into a "sleep” state where the screen dims or turns off.
      * When the auto lock is disabled the screen keeps on even when there is no user input for long times.
      * @param enabled A boolean value that controls whether to enable or disable the auto lock.
      */
@@ -690,6 +712,25 @@
         return screenCanvas;
     };
 
+    CocoonJS.App.addADivToDisableInput = function() {
+        var div = document.createElement("div");
+        div.id = "CocoonJSInputBlockingDiv";
+        div.style.left = 0;
+        div.style.top = 0;
+        div.style.width = "100%";
+        div.style.height = "100%";
+        div.style.position = "absolute";
+        div.style.backgroundColor = 'transparent';
+        div.style.border = "0px solid #000"; 
+        div.style.zIndex = 999999999;
+        document.body.appendChild(div);
+    };
+
+    CocoonJS.App.removeTheDivToEnableInput = function() {
+        var div = document.getElementById("CocoonJSInputBlockingDiv");
+        if (div) document.body.removeChild(div);
+    };
+
     /**
      * Disables the touch events in the CocoonJS environment.
      * @function
@@ -697,6 +738,15 @@
     CocoonJS.App.disableTouchInCocoonJS = function () {
         if (CocoonJS.App.nativeExtensionObjectAvailable) {
             window.ext.IDTK_APP.makeCall("disableTouchLayer", "CocoonJSView");
+        }
+        else if (!navigator.isCocoonJS) {
+            if (!CocoonJS.App.EmulatedWebViewIFrame) {
+                CocoonJS.App.forwardEventsToCocoonJSEnabled = false;
+                CocoonJS.App.forwardAsync("CocoonJS && CocoonJS.App && CocoonJS.App.disableTouchInCocoonJS();");
+            }
+            else {
+                // CocoonJS.App.addADivToDisableInput();
+            }
         }
     };
 
@@ -708,6 +758,15 @@
         if (CocoonJS.App.nativeExtensionObjectAvailable) {
             window.ext.IDTK_APP.makeCall("enableTouchLayer", "CocoonJSView");
         }
+        else if (!navigator.isCocoonJS) {
+            if (!CocoonJS.App.EmulatedWebViewIFrame) {
+                CocoonJS.App.forwardEventsToCocoonJSEnabled = true;
+                CocoonJS.App.forwardAsync("CocoonJS && CocoonJS.App.enableTouchInCocoonJS();");
+            }
+            else {
+                // CocoonJS.App.removeTheDivToEnableInput();
+            }
+        }
     };
 
     /**
@@ -718,6 +777,14 @@
         if (CocoonJS.App.nativeExtensionObjectAvailable) {
             window.ext.IDTK_APP.makeCall("disableTouchLayer", "WebView");
         }
+        else if (!navigator.isCocoonJS) {
+            if (!CocoonJS.App.EmulatedWebViewIFrame) {
+                CocoonJS.App.addADivToDisableInput();
+            }
+            else {
+                CocoonJS.App.forwardAsync("CocoonJS && CocoonJS.App.disableTouchInTheWebView();");
+            }
+        }
     };
 
     /**
@@ -727,6 +794,14 @@
     CocoonJS.App.enableTouchInTheWebView = function () {
         if (CocoonJS.App.nativeExtensionObjectAvailable) {
             window.ext.IDTK_APP.makeCall("enableTouchLayer", "WebView");
+        }
+        else if (!navigator.isCocoonJS) {
+            if (!CocoonJS.App.EmulatedWebViewIFrame) {
+                CocoonJS.App.removeTheDivToEnableInput();
+            }
+            else {
+                CocoonJS.App.forwardAsync("CocoonJS && CocoonJS.App.enableTouchInTheWebView();");
+            }
         }
     };
 
@@ -1478,6 +1553,18 @@
     }
 
     /**
+    * Queries if a file exists in the specified path and storage type. If none or unknown storage type is specified, the TEMPORARY_STORAGE is used as default.
+    * @param {string} path The relative path to look for inside the storage of the underlying system.
+    * @param {CocoonJS.App.StorageType} storageType The storage type where to look for the specified path inside the system.
+    */
+    CocoonJS.App.existsPath = function(path, storageType) {
+        if (CocoonJS.App.nativeExtensionObjectAvailable) {
+            return window.ext.IDTK_APP.makeCall("existsPath", path, storageType);
+        }
+        return false;
+    }
+
+    /**
      * This {@link CocoonJS.EventHandler} object allows listening to events called when the text dialog is finished by accepting it's content.
      * The callback function's documentation is represented by {@link CocoonJS.App.OnTextDialogFinishedListener}
      * @event
@@ -1521,6 +1608,15 @@
      * @memberOf CocoonJS.App
      */
     CocoonJS.App.onSuspended = new CocoonJS.EventHandler("IDTK_APP", "App", "onsuspended");
+
+    /**
+     * This {@link CocoonJS.EventHandler} object allows listening to events called when the application is suspending.
+     * The callback function does not receive any parameter.
+     * @event
+     * @static
+     * @memberOf CocoonJS.App
+     */
+    CocoonJS.App.onSuspending = new CocoonJS.EventHandler("IDTK_APP", "App", "onsuspending");
 
     /**
      * This {@link CocoonJS.EventHandler} object allows listening to events called when the application is activated.
@@ -1660,7 +1756,7 @@
             xhr.onreadystatechange = function(event) {
                 if (xhr.readyState === 4)
                 {
-                    if (xhr.status === 200)
+                    if ((xhr.status >= 200 && xhr.status <=299) || xhr.status === 0)
                     {
 
                         checkEmulatedWebViewReady();
@@ -1675,7 +1771,7 @@
                         );
                         CocoonJS.App.EmulatedWebViewIFrame.contentWindow.location.href= path;
                     }
-                    else if (xhr.status === 404)
+                    else
                     {
                         this.onreadystatechange = null;
                         CocoonJS.App.onLoadInTheWebViewFailed.notifyEventListeners(path);
@@ -1891,6 +1987,38 @@
         // TODO: Implement this function.
     };
 
+    /**
+     * Setups the internal text texture cache size.
+     * The CocoonJS Canvas+ environment is very inefficient when it comes to drawing texts.
+     * In order to improve the performance, a text texture cache is used internally. Once a text is drawn
+     * a texture is stored that matches that text and that text configuration. If the same text is called to 
+     * be drawn, this cached texture would be used. 
+     * This function allows to set the size of the cache. A value of 0 would mean that no cache
+     * will be used. 
+     * @param size The size of the text cache.
+     */
+    CocoonJS.App.setTextCacheSize = function (size) {
+        if (CocoonJS.App.nativeExtensionObjectAvailable) {
+            return CocoonJS.makeNativeExtensionObjectFunctionCall("IDTK_APP", "setTextCacheSize", arguments);
+        }
+    }
+
+    CocoonJS.App.forwardedEventFromTheWebView = function(eventName, eventDataString) {
+        var eventData = JSON.parse(eventDataString);
+        eventData.target = window;
+        var event = new Event(eventName);
+        for (var att in eventData) {
+            event[att] = eventData[att];
+        }
+        event.target = window;
+        window.dispatchEvent(event);
+        var canvases = document.getElementsByTagName("canvas");
+        for (var i = 0; i < canvases.length; i++) {
+            event.target = canvases[i];
+            canvases[i].dispatchEvent(event);
+        }
+    }
+
     
 })();
 ;(function(){
@@ -2059,6 +2187,36 @@
     window.addEventListener("load", function()
     {
         CocoonJS.App.proxifyConsole();
+
+        // Only if we are completely outside CocoonJS (or CocoonJS' webview),
+        // setup event forwarding from the webview (iframe) to CocoonJS.
+        if (!CocoonJS.App.nativeExtensionObjectAvailable) {
+            CocoonJS.App.forwardEventsToCocoonJSEnabled = true;
+            var EVENT_ATTRIBUTES = [ 'timeStamp', 'button', 'type', 'x', 'y', 'pageX', 'pageY', 'clientX', 'clientY', 'offsetX', 'offsetY'];
+            var EVENTS = [ "dblclick", "touchmove", "mousemove", "touchend", "touchcancel", "mouseup", "touchstart", "mousedown", "release", "dragleft", "dragright", "swipeleft", "swiperight" ];
+            function forwardEventToCocoonJS(eventName, event) {
+                var eventData = {};
+                var att, i;
+                for (var att in event) {
+                    i = EVENT_ATTRIBUTES.indexOf(att);
+                    if (i >= 0) {
+                        eventData[att] = event[att];
+                    }
+                }
+                var jsCode = "CocoonJS && CocoonJS.App && CocoonJS.App.forwardedEventFromTheWebView && CocoonJS.App.forwardedEventFromTheWebView(" + JSON.stringify(eventName) + ", '" + JSON.stringify(eventData) + "');";
+                CocoonJS.App.forward(jsCode);
+            }
+            for (i = 0; i < EVENTS.length; i++) {
+                window.addEventListener(EVENTS[i], (function(eventName) {
+                    return function(event) {
+                        if (CocoonJS.App.forwardEventsToCocoonJSEnabled) {
+                            forwardEventToCocoonJS(eventName, event);
+                        }
+                    };
+                })(EVENTS[i]));
+            }
+        }
+
     });
 
     /**
@@ -7020,7 +7178,7 @@
 	* If no value is given, the maximum size available is used.
 	* @param captureFrameRate The frame rate to capture the video at. If the value does not correspond to any of the frame rates supported by the camera, the closest one is used. See {@link CocoonJS.Camera.CameraInfo}.
 	* If no value is given, the maximum frame rate available is used.
-	*Â @param captureImageFormat A value from the available {@link CocoonJS.Camera.CaptureFormatType} formats to specify the format of the images that will be captured. See {@link CocoonJS.Camera.CameraInfo}.
+	* @param captureImageFormat A value from the available {@link CocoonJS.Camera.CaptureFormatType} formats to specify the format of the images that will be captured. See {@link CocoonJS.Camera.CameraInfo}.
 	* If no value is given, the first available capture image format is used.
 	* @returns {image} A image object that will automatically update itself with the captured frames or null if the camera capture could not start.
 	*/

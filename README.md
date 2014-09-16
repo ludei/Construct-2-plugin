@@ -29,6 +29,9 @@ This plugin already comes bundled with Construct 2, however the update rate of C
 Visit [our help center](https://support.ludei.com).
 ## Changelog
 
+### Sep 16, 2014
+* Ads demo added to the .capx
+
 ### May 15, 2014
 * Fixed "RefreshFullScreen" typo.
 * Fixed error that causes an alert in strict mode

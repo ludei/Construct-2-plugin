@@ -94,6 +94,9 @@ AddCondition(36, cf_trigger, "On Consume Purchase Completed", "In-app purchase",
 
 AddCondition(37, cf_trigger, "On Consume Purchase Started", "In-app purchase", "On Consume Purchase Started", "Triggered when the consumption of a purchase starts.", "onConsumePurchaseStarted");
 
+AddCondition(38, cf_trigger, "On banner hidden", "Ads", "On banner hidden", "Triggered when a banner ad is hidden.", "onBannerHidden");
+
+
 /**
 * Actions
 */

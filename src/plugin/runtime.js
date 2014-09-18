@@ -1,9 +1,3 @@
-// ECMAScript 5 strict mode
-"use strict";
-
-assert2(cr, "cr namespace not created");
-assert2(cr.plugins_, "cr.plugins_ not created");
-
 /**
 * Object holder for the plugin
 */
@@ -81,6 +75,10 @@ cr.plugins_.CJSAds = function(runtime)
 				bannerReady = true;
 				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onBannerReady, self);
 			});
+			CocoonJS["Ad"]["onBannerHidden"].addEventListener(function ()
+			{
+				self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onBannerHidden, self);
+			});
 			CocoonJS["Ad"]["onFullScreenShown"].addEventListener(function ()
 			{
 				self.isShowingFullscreen = true;
@@ -114,6 +112,7 @@ cr.plugins_.CJSAds = function(runtime)
 				});
 				CocoonJS["Store"]["onProductPurchaseCompleted"].addEventListener(function (purchase)
 				{
+					console.log("onProductPurchaseCompleted " + purchase["productId"]);
 					self.triggerProduct = purchase["productId"];
 					PurchaseTransactionId = purchase["transactionId"];
 					PurchaseProductId = purchase["productId"];
@@ -123,12 +122,14 @@ cr.plugins_.CJSAds = function(runtime)
 				});
 				CocoonJS["Store"]["onProductPurchaseFailed"].addEventListener(function (productId, errorMsg)
 				{
+					console.log("onProductPurchaseFailed " + productId);
 					self.triggerProduct = productId;
 					console.log(errorMsg);
 					self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnPurchaseFail, self);
 				});
 				CocoonJS["Store"]["onProductPurchaseStarted"].addEventListener(function (productId)
 				{
+					console.log("onProductPurchaseStarted " + productId);
 					self.triggerProduct = productId;
 					self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnPurchaseStart, self);
 				});
@@ -143,20 +144,24 @@ cr.plugins_.CJSAds = function(runtime)
 				CocoonJS["Store"]["onProductsFetchCompleted"].addEventListener(function (products)
 				{
 					for (var i = products.length - 1; i >= 0; i--) {
+                        console.log("Product fetched: " + products[i].productId);
 						CocoonJS["Store"]["addProduct"](products[i]);
 					};
 					self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onProductsFetchCompleted, self);
 				});
 				CocoonJS["Store"]["onRestorePurchasesStarted"].addEventListener(function ()
 				{
+					console.log("onRestorePurchasesStarted ");
 					self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onRestorePurchasesStarted, self);
 				});
 				CocoonJS["Store"]["onRestorePurchasesCompleted"].addEventListener(function ()
 				{
+					console.log("onRestorePurchasesCompleted ");
 					self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onRestorePurchasesCompleted, self);
 				});
 				CocoonJS["Store"]["onRestorePurchasesFailed"].addEventListener(function ()
 				{
+					console.log("onRestorePurchasesFailed ");
 					self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onRestorePurchasesFailed, self);
 				});
 				CocoonJS["Store"]["requestInitialization"]({
@@ -238,6 +243,10 @@ cr.plugins_.CJSAds = function(runtime)
 	{
 		return true;
 	};
+	Cnds.prototype.onBannerHidden = function ()
+	{
+		return true;
+	};
 	Cnds.prototype.IsShowingFullscreen = function ()
 	{
 		return this.isShowingFullscreen;
@@ -254,14 +263,17 @@ cr.plugins_.CJSAds = function(runtime)
 	};
 	Cnds.prototype.OnPurchaseStart = function (productid)
 	{
+		console.log("OnPurchaseStart");
 		return this.triggerProduct === productid;
 	};
 	Cnds.prototype.OnPurchaseComplete = function (productid)
 	{
+		console.log("OnPurchaseComplete");
 		return this.triggerProduct === productid;
 	};
 	Cnds.prototype.OnPurchaseFail = function (productid)
 	{
+		console.log("OnPurchaseFail");
 		return this.triggerProduct === productid;
 	};
 	Cnds.prototype.onProductsFetchStarted = function(){

@@ -10,6 +10,7 @@ Here are some screenshots of the .capx:
 ![Demo](http://support.ludei.com/hc/en-us/article_attachments/200643378/Screen_Shot_2014-04-14_at_12.58.54.png)
 ![Demo](http://support.ludei.com/hc/en-us/article_attachments/200697397/social_actions.png)
 ![Demo](http://support.ludei.com/hc/en-us/article_attachments/200694983/social_login_leaderboard.png)
+![Demo](http://oi59.tinypic.com/28asrih.jpg)
 
 ## Configuration
 The plugin can be configured by selecting the object "cocoonjsads" from the "Object types" list inside Construct 2.

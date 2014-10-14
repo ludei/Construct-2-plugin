@@ -208,7 +208,6 @@ cr.plugins_.CJSAds = function(runtime)
 				this.socialService = CocoonJS["Social"]["Facebook"];
 				if(this.socialService){
 					var config = {};
-					alert(this.facebookAppID + " " + this.facebookChannel); 
 					if(this.facebookAppID && this.facebookChannel){
 						config.appId = this.facebookAppID;
 						config.channelUrl = this.facebookChannel;

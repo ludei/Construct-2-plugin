@@ -208,13 +208,15 @@ cr.plugins_.CJSAds = function(runtime)
 				this.socialService = CocoonJS["Social"]["Facebook"];
 				if(this.socialService){
 					var config = {};
-					if(this.facebookAppID){
+					alert(this.facebookAppID + " " + this.facebookChannel); 
+					if(this.facebookAppID && this.facebookChannel){
 						config.appId = this.facebookAppID;
 						config.channelUrl = this.facebookChannel;
 					} 
 					this.socialService.init(config);
 					if(!!this.socialService["nativeExtensionObjectAvailable"]){
 						this.socialServiceInterface = this.socialService.getSocialInterface();
+						this.socialServiceInterface.setTemplates("leaderboards.html", "achievements.html");
 					}
 				}else{
 					throw new Error("Cannot find Facebook service, are you using the latest CocoonJS Extensions?");

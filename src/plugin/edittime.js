@@ -216,7 +216,7 @@ var property_list = [
 		"Leaderboards Service",
 		"None",
 		"The service that will handle the leaderboards/achievements for your game",
-		"None|Based on user operating system|GameCenter|Google Play Games"), // Facebook not available yet
+		"None|Based on user operating system|GameCenter|Google Play Games|Facebook"), // Facebook not available yet
 	new cr.Property(ept_combo,
 		"Store sandbox",
 		"Enabled",
@@ -226,6 +226,16 @@ var property_list = [
 		"Google Play Games ClientID",
 		"",
 		"The ClientID for Google Play Games (only for iOs when using Google Play Games)",
+		""),
+	new cr.Property(ept_text,
+		"Facebook AppID",
+		"",
+		"The AppID of your Facebook app (create one at Facebook development site to get yours)",
+		""),
+	new cr.Property(ept_text,
+		"Facebook channel",
+		"",
+		"The Facebook channel for your app",
 		"")
 	];
 

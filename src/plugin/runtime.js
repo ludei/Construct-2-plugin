@@ -51,6 +51,8 @@ cr.plugins_.CJSAds = function(runtime)
 		this.storeManaged 			= (this.properties[1] !== 1);
 		this.storeSandboxed 		= (this.properties[3] !== 0);
 		this.socialServiceClientID 	= this.properties[4];
+		this.facebookAppID 			= this.properties[5];
+		this.facebookChannel 		= this.properties[6];
 		this.onConsumePurchaseFailedTransactionId 	= "";
 		this.onConsumePurchaseCompleted 			= "";
 		this.onPurchaseCompleteInfo 				= "";
@@ -201,8 +203,26 @@ cr.plugins_.CJSAds = function(runtime)
 					throw new Error("Cannot find GooglePlayGames service, are you using the latest CocoonJS Extensions?");
 				}
 			}
+			this.startFacebook = function(){
+				console.log("Facebook selected as social service");
+				this.socialService = CocoonJS["Social"]["Facebook"];
+				if(this.socialService){
+					var config = {};
+					if(this.facebookAppID){
+						config.appId = this.facebookAppID;
+						config.channelUrl = this.facebookChannel;
+					} 
+					this.socialService.init(config);
+					if(!!this.socialService["nativeExtensionObjectAvailable"]){
+						this.socialServiceInterface = this.socialService.getSocialInterface();
+					}
+				}else{
+					throw new Error("Cannot find Facebook service, are you using the latest CocoonJS Extensions?");
+				}
+			}
 			if(this.socialServiceSelected === 2) this.startGameCenter.apply(this,[]);
 			if(this.socialServiceSelected === 3) this.startGooglePlay.apply(this,[]);
+			if(this.socialServiceSelected === 4) this.startFacebook.apply(this,[]);
 			if(this.socialServiceSelected === 1){
 				if(CocoonJS["Social"]["GooglePlayGames"]["nativeExtensionObjectAvailable"]){
 					this.startGooglePlay.apply(this,[]);
@@ -482,8 +502,8 @@ cr.plugins_.CJSAds = function(runtime)
 		if(isAuthenticated){
 			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceLoginSuccess, self);
 		}else{
-			console.log(error);
-			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceOpenLeaderBoardClosed, self);
+			console.log(JSON.stringify(error));
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceLoginFailed, self);
 		}
 	};
 	Acts.prototype.socialServiceRequestLogin = function ()

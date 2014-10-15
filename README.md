@@ -11,6 +11,7 @@ Here are some screenshots of the .capx:
 ![Demo](http://support.ludei.com/hc/en-us/article_attachments/200697397/social_actions.png)
 ![Demo](http://support.ludei.com/hc/en-us/article_attachments/200694983/social_login_leaderboard.png)
 ![Demo](http://oi59.tinypic.com/28asrih.jpg)
+![Demo](http://oi57.tinypic.com/xnsyld.jpg)
 
 ## Configuration
 The plugin can be configured by selecting the object "cocoonjsads" from the "Object types" list inside Construct 2.
@@ -30,21 +31,26 @@ This plugin already comes bundled with Construct 2, however the update rate of C
 Visit [our help center](https://support.ludei.com).
 ## Changelog
 
+### Oct 14, 2014
+* Added support for Facebook. 
+* Fixed error in Game Center Leaderboards. 
+* Fixed CSS error in Leaderboards/Achievements templates. 
+
 ### Sep 16, 2014
 * Ads demo added to the .capx
 
 ### May 15, 2014
 * Fixed "RefreshFullScreen" typo.
-* Fixed error that causes an alert in strict mode
-* Added 2 missing methods of the ads service (onBannerReady/onFullScreenReady)
-* Updated .capx with ads section
+* Fixed error that causes an alert in strict mode.
+* Added 2 missing methods of the ads service (onBannerReady/onFullScreenReady).
+* Updated .capx with ads section.
 
 ### April 16, 2014
-* Fixed bug that shows a banner when should not
+* Fixed bug that shows a banner when should not.
 * Updated readme.md
-* Updated folder structure
+* Updated folder structure.
 
 ### April 14, 2014
-* Added support for Google Play Games / Game Center leaderboards & Achievements
+* Added support for Google Play Games / Game Center leaderboards & Achievements.
 * Fixed bug that prevents the user to finish a in-app purchase.
-* Updated documentation
+* Updated documentation.

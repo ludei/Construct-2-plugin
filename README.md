@@ -1,6 +1,6 @@
 CocoonJS Plugin for Construct 2
 ==================
-This plugin can be used in Construct 2 to manage the CocoonJS JavaScript APIs. The currently supported version of Construct 2 is stable(r173).
+This plugin can be used in Construct 2 to manage the CocoonJS JavaScript APIs. The currently supported version of Construct 2 is stable (r184).
 
 ## Demo Example [capx]
 This plugin comes with a .capx (a valid Construct 2 project) as a reference to know how to use it, you can download it from [here](capx/CocoonJS Plugin Demo.capx?raw=true).
@@ -47,7 +47,7 @@ Visit [our help center](https://support.ludei.com).
 
 ### April 16, 2014
 * Fixed bug that shows a banner when should not.
-* Updated readme.md
+* Updated README.md
 * Updated folder structure.
 
 ### April 14, 2014

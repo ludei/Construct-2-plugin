@@ -171,7 +171,10 @@ AddStringParam("Product id", "The product id of the purchase.");
 AddAction(21, 0, "Consume Purchase", "In-app purchase", "Consume Purchase", "Consumes a purchase", "ConsumePurchase");
 
 // Social service actions
- AddAction(22, 0, "Request logout", "Social", "Request logout", "", "socialServiceRequestLogout");
+AddAction(22, 0, "Request logout", "Social", "Request logout", "", "socialServiceRequestLogout");
+
+AddStringParam("Text to share", "The text content that will be shared");
+AddAction(23, 0, "Share", "Social", "Share", "", "socialServiceShare");
 
 /**
 * Expressions

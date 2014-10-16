@@ -536,6 +536,10 @@ cr.plugins_.CJSAds = function(runtime)
 		if(!this.socialServiceInterface) return;
 			this.socialServiceInterface.logout(socialServiceRequestLogoutCallback);
 	};
+	Acts.prototype.socialServiceShare = function (textToShare)
+	{
+		CocoonJS.App.share(textToShare);
+	};
 	function socialServiceSubmitScoreCallback(err){
 		if(!err){
 			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceSubmitScoreSuccess, self);

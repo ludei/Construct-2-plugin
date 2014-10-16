@@ -96,6 +96,10 @@ AddCondition(37, cf_trigger, "On Consume Purchase Started", "In-app purchase", "
 
 AddCondition(38, cf_trigger, "On banner hidden", "Ads", "On banner hidden", "Triggered when a banner ad is hidden.", "onBannerHidden");
 
+// Social service callbacks
+AddCondition(39, cf_trigger, "On logout succeeded", "Social", "On Logout succeeded", "Triggered when the user has logged out the social service.", "onSocialServiceLogoutSuccess");
+
+AddCondition(40, cf_trigger, "On logout failed", "Social", "On Logout Failed", "Triggered if the logout of the social service has failed.", "onSocialServiceLogoutFailed");
 
 /**
 * Actions
@@ -165,6 +169,9 @@ AddAction(20, 0, "Submit Achievement", "Achievements", "Submit Achievement", "Su
 AddStringParam("Transaction Id", "The transaction id of the purchase you'd want to consume.");
 AddStringParam("Product id", "The product id of the purchase.");
 AddAction(21, 0, "Consume Purchase", "In-app purchase", "Consume Purchase", "Consumes a purchase", "ConsumePurchase");
+
+// Social service actions
+ AddAction(22, 0, "Request logout", "Social", "Request logout", "", "socialServiceRequestLogout");
 
 /**
 * Expressions

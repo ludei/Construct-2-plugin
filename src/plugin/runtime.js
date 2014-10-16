@@ -338,6 +338,14 @@ cr.plugins_.CJSAds = function(runtime)
 	{
 		return true;
 	};
+	Cnds.prototype.onSocialServiceLogoutSuccess = function ()
+	{
+		return true;
+	};
+	Cnds.prototype.onSocialServiceLogoutFailed = function ()
+	{
+		return true;
+	};
 	Cnds.prototype.onSocialServiceSubmitScoreSuccess = function ()
 	{
 		return true;
@@ -516,11 +524,17 @@ cr.plugins_.CJSAds = function(runtime)
 			this.socialServiceInterface.login(socialServiceRequestLoginCallback);
 		}
 	};
+	function socialServiceRequestLogoutCallback(error){
+		if(!error){
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceLogoutSuccess, self);	
+		}else{
+			console.log(JSON.stringify(error));
+			self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onSocialServiceLogoutFailed, self);}
+	};
 	Acts.prototype.socialServiceRequestLogout = function ()
 	{
 		if(!this.socialServiceInterface) return;
-		if(this.socialServiceInterface.isLoggedIn())
-			this.socialServiceInterface.logout(socialServiceRequestLoginCallback);
+			this.socialServiceInterface.logout(socialServiceRequestLogoutCallback);
 	};
 	function socialServiceSubmitScoreCallback(err){
 		if(!err){

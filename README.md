@@ -12,6 +12,8 @@ Here are some screenshots of the .capx:
 ![Demo](http://support.ludei.com/hc/en-us/article_attachments/200694983/social_login_leaderboard.png)
 ![Demo](http://oi59.tinypic.com/28asrih.jpg)
 ![Demo](http://oi57.tinypic.com/xnsyld.jpg)
+![Demo](http://oi60.tinypic.com/169knc2.jpg)
+![Demo](http://oi58.tinypic.com/qnr56s.jpg)
 
 ## Configuration
 The plugin can be configured by selecting the object "cocoonjsads" from the "Object types" list inside Construct 2.
@@ -30,6 +32,9 @@ This plugin already comes bundled with Construct 2, however the update rate of C
 ## Need help?
 Visit [our help center](https://support.ludei.com).
 ## Changelog
+
+### Oct 16, 2014
+* Added Logout feature for the Social Interface (Request Logout/ On Logout Sucedded/ On Logout Failed). 
 
 ### Oct 14, 2014
 * Added support for Facebook. 

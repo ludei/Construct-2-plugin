@@ -174,7 +174,7 @@ AddAction(21, 0, "Consume Purchase", "In-app purchase", "Consume Purchase", "Con
 AddAction(22, 0, "Request logout", "Social", "Request logout", "", "socialServiceRequestLogout");
 
 AddStringParam("Text to share", "The text content that will be shared");
-//AddAction(23, 0, "Share", "Social", "Share", "", "socialServiceShare");
+AddAction(23, 0, "Share", "Social", "Share", "", "socialServiceShare");
 
 /**
 * Expressions

@@ -33,11 +33,15 @@ This plugin already comes bundled with Construct 2, however the update rate of C
 Visit [our help center](https://support.ludei.com).
 ## Changelog
 
+### Oct 18, 2014
+* Added native Share feature. 
+* Updated and fixed .capx. Tested on r184.
+
 ### Oct 16, 2014
 * Added Logout feature for the Social Interface (Request Logout and  onSocialServiceLogoutSuccess / onSocialServiceLogoutFailed). 
 
 ### Oct 14, 2014
-* Added support for Facebook. 
+* Added support for Facebook (Login, Leaderboards, Achievements). 
 * Fixed error in Game Center Leaderboards. 
 * Fixed CSS error in Leaderboards/Achievements templates. 
 

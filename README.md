@@ -33,6 +33,10 @@ This plugin already comes bundled with Construct 2, however the update rate of C
 Visit [our help center](https://support.ludei.com).
 ## Changelog
 
+### Oct 24, 2014
+* Added setMaxMemory feature.
+* Added setNPOTEnabled feature.
+
 ### Oct 18, 2014
 * Added native Share feature. 
 * Updated and fixed .capx. Tested on r184.

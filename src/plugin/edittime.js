@@ -1,23 +1,22 @@
-function GetPluginSettings()
-{
-	return {
-		"name":			"CocoonJS",
-		"id":			"CJSAds",
-		"version":		"1.0",
-		"description":	"Access CocoonJS extensions like ads and in-app purchases.",
-		"author":		"Scirra & Ludei",
-		"help url":		"http://www.ludei.com",
-		"category":		"Platform specific",
-		"type":			"object",			// not in layout
-		"rotatable":	false,
-		"flags":		pf_singleglobal,
-		"dependency": "achievements.html;achievement_locked.png;close.png;loading.gif;main.css;page_achievements.css;page_leaderboards.css;style.css;leaderboards.html;jquery.equalheights.js;jquery-1.8.3.min.js;"
-	};
+function GetPluginSettings() {
+    return {
+        "name": "CocoonJS",
+        "id": "CJSAds",
+        "version": "1.0",
+        "description": "Access CocoonJS extensions like ads and in-app purchases.",
+        "author": "Scirra & Ludei",
+        "help url": "http://www.ludei.com",
+        "category": "Platform specific",
+        "type": "object", // not in layout
+        "rotatable": false,
+        "flags": pf_singleglobal,
+        "dependency": "achievements.html;achievement_locked.png;close.png;loading.gif;main.css;page_achievements.css;page_leaderboards.css;style.css;leaderboards.html;jquery.equalheights.js;jquery-1.8.3.min.js;"
+    };
 };
 
 /**
-* Conditions
-*/
+ * Conditions
+ */
 AddCondition(0, 0, "Is showing banner ad", "Ads", "Is showing banner ad", "True if currently showing a banner ad.", "IsShowingBanner");
 AddCondition(1, 0, "Is in CocoonJS", "CocoonJS", "Is in CocoonJS", "True if currently running on the CocoonJS platform.", "IsCocoonJS");
 AddCondition(2, cf_trigger, "On banner shown", "Ads", "On banner shown", "Triggered when a banner ad is shown.", "OnBannerShown");
@@ -102,8 +101,8 @@ AddCondition(39, cf_trigger, "On logout succeeded", "Social", "On Logout succeed
 AddCondition(40, cf_trigger, "On logout failed", "Social", "On Logout Failed", "Triggered if the logout of the social service has failed.", "onSocialServiceLogoutFailed");
 
 /**
-* Actions
-*/
+ * Actions
+ */
 AddComboParamOption("top center");
 AddComboParamOption("bottom center");
 AddComboParam("Layout", "Choose where the banner ad will appear.");
@@ -177,8 +176,8 @@ AddStringParam("Text to share", "The text content that will be shared");
 AddAction(23, 0, "Share", "Social", "Share", "", "socialServiceShare");
 
 /**
-* Expressions
-*/
+ * Expressions
+ */
 AddExpression(0, ef_return_string, "", "Keyboard input", "InputText", "In 'On input OK', get the text entered.");
 
 AddExpression(1, ef_return_number, "", "In-app purchase", "ProductCount", "Return the number of products available for purchase.");
@@ -209,98 +208,86 @@ AddExpression(10, ef_return_string, "", "In-app purchase", "PurchaseTransactionI
 ACESDone();
 
 /**
-* Plugin properties
-*/
+ * Plugin properties
+ */
 var property_list = [
-	new cr.Property(ept_combo,
-		"Physics engine",
-		"Accelerated",
-		"Whether to use the CocoonJS accelerated physics engine or the standard web-based one.",
-		"Accelerated|Standard web-based"),
-	new cr.Property(ept_combo,
-		"Store mode",
-		"Managed",
-		"Whether to use the store in managed mode (using Ludei's cloud service).",
-		"Managed|Unmanaged"),
-	new cr.Property(ept_combo,
-		"Leaderboards Service",
-		"None",
-		"The service that will handle the leaderboards/achievements for your game",
-		"None|Based on user operating system|GameCenter|Google Play Games|Facebook"), // Facebook not available yet
-	new cr.Property(ept_combo,
-		"Store sandbox",
-		"Enabled",
-		"Whether to use the store in sandbox mode (for testing).",
-		"Disabled|Enabled"),
-	new cr.Property(ept_text,
-		"Google Play Games ClientID",
-		"",
-		"The ClientID for Google Play Games (only for iOs when using Google Play Games)",
-		""),
-	new cr.Property(ept_text,
-		"Facebook AppID",
-		"",
-		"The AppID of your Facebook app (create one at Facebook development site to get yours)",
-		""),
-	new cr.Property(ept_text,
-		"Facebook channel",
-		"",
-		"The Facebook channel for your app",
-		"")
-	];
+    new cr.Property(ept_combo,
+        "Physics engine",
+        "Accelerated",
+        "Whether to use the CocoonJS accelerated physics engine or the standard web-based one.",
+        "Accelerated|Standard web-based"),
+    new cr.Property(ept_combo,
+        "Store mode",
+        "Managed",
+        "Whether to use the store in managed mode (using Ludei's cloud service).",
+        "Managed|Unmanaged"),
+    new cr.Property(ept_combo,
+        "Leaderboards Service",
+        "None",
+        "The service that will handle the leaderboards/achievements for your game",
+        "None|Based on user operating system|GameCenter|Google Play Games|Facebook"), // Facebook not available yet
+    new cr.Property(ept_combo,
+        "Store sandbox",
+        "Enabled",
+        "Whether to use the store in sandbox mode (for testing).",
+        "Disabled|Enabled"),
+    new cr.Property(ept_text,
+        "Google Play Games ClientID",
+        "",
+        "The ClientID for Google Play Games (only for iOs when using Google Play Games)",
+        ""),
+    new cr.Property(ept_text,
+        "Facebook AppID",
+        "",
+        "The AppID of your Facebook app (create one at Facebook development site to get yours)",
+        ""),
+    new cr.Property(ept_text,
+        "Facebook channel",
+        "",
+        "The Facebook channel for your app",
+        "")
+];
 
 // Called by IDE when a new object type is to be created
-function CreateIDEObjectType()
-{
-	return new IDEObjectType();
+function CreateIDEObjectType() {
+    return new IDEObjectType();
 }
 
 // Class representing an object type in the IDE
-function IDEObjectType()
-{
-	assert2(this instanceof arguments.callee, "Constructor called as a function");
+function IDEObjectType() {
+    assert2(this instanceof arguments.callee, "Constructor called as a function");
 }
 
 // Called by IDE when a new object instance of this type is to be created
-IDEObjectType.prototype.CreateInstance = function(instance)
-{
-	return new IDEInstance(instance, this);
+IDEObjectType.prototype.CreateInstance = function(instance) {
+    return new IDEInstance(instance, this);
 }
 
 // Class representing an individual instance of an object in the IDE
-function IDEInstance(instance, type)
-{
-	assert2(this instanceof arguments.callee, "Constructor called as a function");
+function IDEInstance(instance, type) {
+    assert2(this instanceof arguments.callee, "Constructor called as a function");
 
-	// Save the constructor parameters
-	this.instance = instance;
-	this.type = type;
+    // Save the constructor parameters
+    this.instance = instance;
+    this.type = type;
 
-	// Set the default property values from the property table
-	this.properties = {};
+    // Set the default property values from the property table
+    this.properties = {};
 
-	for (var i = 0; i < property_list.length; i++)
-		this.properties[property_list[i].name] = property_list[i].initial_value;
+    for (var i = 0; i < property_list.length; i++)
+        this.properties[property_list[i].name] = property_list[i].initial_value;
 }
 
 // Called by the IDE after all initialization on this instance has been completed
-IDEInstance.prototype.OnCreate = function()
-{
-}
+IDEInstance.prototype.OnCreate = function() {}
 
 // Called by the IDE after a property has been changed
-IDEInstance.prototype.OnPropertyChanged = function(property_name)
-{
-}
+IDEInstance.prototype.OnPropertyChanged = function(property_name) {}
 
 // Called by the IDE to draw this instance in the editor
-IDEInstance.prototype.Draw = function(renderer)
-{
-}
+IDEInstance.prototype.Draw = function(renderer) {}
 
 // Called by the IDE when the renderer has been released (ie. editor closed)
 // All handles to renderer-created resources (fonts, textures etc) must be dropped.
 // Don't worry about releasing them - the renderer will free them - just null out references.
-IDEInstance.prototype.OnRendererReleased = function()
-{
-}
+IDEInstance.prototype.OnRendererReleased = function() {}

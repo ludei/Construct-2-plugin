@@ -444,7 +444,7 @@ cr.plugins_.CJSAds = function(runtime) {
                     text: initial_,
                     type: typestr,
                     cancelText: canceltext_,
-                    confirmText: oktext_)
+                    confirmText: oktext_
             }, {
                 success: function(text) {
                     input_text = text;

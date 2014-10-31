@@ -48,7 +48,7 @@
      * @example
      * console.log(Cocoon.version);
      */
-    Cocoon.version = "3.0.0";
+    Cocoon.version = "3.0.4";
     
     /**
      * Is the native environment available? true if so.
@@ -1274,9 +1274,9 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
       * @example 
       * Cocoon.Dialog.prompt({ 
       *     title : "title",
-      *     message : "message",
+      *     message : "message"
       * },{
-      *     success : function(){ ... },
+      *     success : function(text){ ... },
       *     cancel : function(){ ... }
       * });
       */
@@ -1427,7 +1427,7 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
 
         if (Cocoon.nativeAvailable) {
             Cocoon.callNative("IDTK_APP", "showKeyboard", 
-                [params, insertCallback, deleteBackward, doneCallback, cancelCallback], true);
+                [params, insertCallback, deleteCallback, doneCallback, cancelCallback], true);
         }
     };
 
@@ -1454,7 +1454,7 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
       */
     extension.dismissKeyboard = function() {
         if (Cocoon.nativeAvailable) {
-            Cocoon.callNative("IDTK_APP", "dismissKeyboard", null, true);
+            Cocoon.callNative("IDTK_APP", "dismissKeyboard", [], true);
         }
     }
 
@@ -1500,7 +1500,8 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
 
     return extension;
 
-});;/**
+});
+;/**
 * This namespace represents all functionalities available in the WebView environment.
 *
 * <div class="alert alert-success">
@@ -1509,15 +1510,15 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
 *
 * @namespace Cocoon.WebView
 * @example
-* Cocoon.App.loadInTheWebView("wv.html", {
-*      success: function() {
-*          Cocoon.App.showTheWebView();
-*      },
-*      error: function() {
-*          console.log("Cannot show the Webview for some reason :/");
-*          console.log(JSON.strigify(arguments));
-*      }
-*  });
+* Cocoon.App.WebView.on("load",{
+*   success : function(){
+*       Cocoon.App.showTheWebView();
+*   },
+*   error : function(){
+*        console.log("Cannot show the Webview for some reason :/");
+*   }
+* });
+* Cocoon.App.loadInTheWebView("WV.html");
 */
 
 Cocoon.define("Cocoon.WebView" , function(extension){
@@ -3494,7 +3495,7 @@ Cocoon.define("Cocoon.Widget" , function(extension){
      */
 	signal.register("shown", extension.onFullScreenShown);
 	/**
-     * Allows to listen to events called when a banner is hidden.
+     * Allows to listen to events called when a full screen ad is hidden.
      * @event On interstitial hidden
      * @memberof Cocoon.Ad
      * @example

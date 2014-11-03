@@ -10,7 +10,13 @@
 </head>
 
 <body>
+    <script>
+    function dialogClose(){
+        var dialog = Cocoon.Widget.Webdialog(); 
+        dialog.close();
+    }
 
+    </script>
     <div id="loadingDiv"></div>
     <div id="container" class="page_leaderboards">
 
@@ -27,7 +33,7 @@
         </div>
 
 
-        <p id="close"><a href="#" onclick="Cocoon.Widget.WebDialog.close(); return false;">Close</a>
+        <p id="close"><a href="#" onclick="dialogClose(); return false;">Close</a>
         </p>
 
     </div>

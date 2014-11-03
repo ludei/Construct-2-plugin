@@ -40,7 +40,7 @@ cr.plugins_.CJSAds = function(runtime) {
             this.socialService = null;
             this.socialServiceAvailable = false;
             this.socialServiceSelected = this.properties[2];
-            this.storeServiceAvailable = (this.runtime.isCocoonJS && typeof Cocoon.Store.nativeAvailable !== "undefined");
+            this.storeServiceAvailable = (this.runtime.isCocoonJs && typeof Cocoon.Store.nativeAvailable !== "undefined");
             this.storeManaged = (this.properties[1] !== 1);
             this.storeSandboxed = (this.properties[3] !== 0);
             this.socialServiceClientID = this.properties[4];
@@ -51,7 +51,7 @@ cr.plugins_.CJSAds = function(runtime) {
             this.onPurchaseCompleteInfo = "";
 
             self = this;
-            if (self.runtime.isCocoonJS) {
+            if (self.runtime.isCocoonJs) {
 
                 Cocoon.Ad.banner.on("shown", function() {
                     self.isShowingBanner = true;
@@ -226,7 +226,7 @@ cr.plugins_.CJSAds = function(runtime) {
             return this.isShowingBanner;
         };
         Cnds.prototype.IsCocoonJS = function() {
-            return this.runtime.isCocoonJS;
+            return this.runtime.isCocoonJs;
         };
         Cnds.prototype.OnBannerShown = function() {
             return true;
@@ -253,7 +253,7 @@ cr.plugins_.CJSAds = function(runtime) {
             return true;
         }
         Cnds.prototype.IsStoreAvailable = function() {
-            if (this.runtime.isCocoonJS)
+            if (this.runtime.isCocoonJs)
                 return this.storeServiceAvailable && Cocoon.Store.canPurchase();
             else
                 return false;
@@ -289,7 +289,7 @@ cr.plugins_.CJSAds = function(runtime) {
             return true;
         }
         Cnds.prototype.IsProductPurchased = function(productid) {
-            if (this.runtime.isCocoonJS)
+            if (this.runtime.isCocoonJs)
                 return Cocoon.Store.isProductPurchased(productid);
             else
                 return false;
@@ -363,7 +363,7 @@ cr.plugins_.CJSAds = function(runtime) {
          */
         function Acts() {};
         Acts.prototype.ShowBanner = function(layout_) {
-            if (!this.runtime.isCocoonJS)
+            if (!this.runtime.isCocoonJs)
                 return;
             bannerPosition = (layout_ === 0 ? Cocoon.Ad.BannerLayout.TOP_CENTER : Cocoon.Ad.BannerLayout.BOTTOM_CENTER);
             if (bannerReady) {
@@ -375,7 +375,7 @@ cr.plugins_.CJSAds = function(runtime) {
             }
         };
         Acts.prototype.ShowFullscreen = function() {
-            if (!this.runtime.isCocoonJS)
+            if (!this.runtime.isCocoonJs)
                 return;
             if (fullscreenReady)
                 Cocoon.Ad.showInterstitial();
@@ -390,52 +390,52 @@ cr.plugins_.CJSAds = function(runtime) {
             this.isShowingBanner = false;
         };
         Acts.prototype.PreloadBanner = function() {
-            if (!this.runtime.isCocoonJS)
+            if (!this.runtime.isCocoonJs)
                 return;
             Cocoon.Ad.loadBanner();
         };
         Acts.prototype.PreloadFullscreen = function() {
-            if (!this.runtime.isCocoonJS)
+            if (!this.runtime.isCocoonJs)
                 return;
             Cocoon.Ad.loadInterstitial();
         };
         Acts.prototype.RefreshBanner = function() {
-            if (!this.runtime.isCocoonJS)
+            if (!this.runtime.isCocoonJs)
                 return;
             Cocoon.Ad.refreshBanner();
         };
         Acts.prototype.RefreshFullScreen = function() {
-            if (!this.runtime.isCocoonJS)
+            if (!this.runtime.isCocoonJs)
                 return;
             Cocoon.Ad.refreshInterstitial();
         };
         Acts.prototype.Purchase = function(productid) {
-            if (!this.runtime.isCocoonJS)
+            if (!this.runtime.isCocoonJs)
                 return;
             Cocoon.Store.purchase(productid);
         };
         Acts.prototype.ConsumePurchase = function(transactionId, productId) {
-            if (!this.runtime.isCocoonJS)
+            if (!this.runtime.isCocoonJs)
                 return;
             Cocoon.Store.consume(transactionId, productId);
         };
         Acts.prototype.fetchProductsFromStore = function(products) {
-            if (!this.runtime.isCocoonJS)
+            if (!this.runtime.isCocoonJs)
                 return;
             Cocoon.Store.loadProducts(products.split(","));
         };
         Acts.prototype.PurchasePreview = function(productid) {
-            if (!this.runtime.isCocoonJS)
+            if (!this.runtime.isCocoonJs)
                 return;
             Cocoon.Store.purchaseProductModalWithPreview(productid);
         };
         Acts.prototype.RestorePurchases = function() {
-            if (!this.runtime.isCocoonJS)
+            if (!this.runtime.isCocoonJs)
                 return;
             Cocoon.Store.restore();
         };
         Acts.prototype.PromptKeyboard = function(title_, message_, initial_, type_, canceltext_, oktext_) {
-            if (!this.runtime.isCocoonJS)
+            if (!this.runtime.isCocoonJs)
                 return;
             var typestr = ["text", "num", "phone", "email", "url"][type_];
             Cocoon.Dialog.prompt({
@@ -457,7 +457,7 @@ cr.plugins_.CJSAds = function(runtime) {
     };
 
     Acts.prototype.UpdateProductsList = function() {
-        if (!this.runtime.isCocoonJS)
+        if (!this.runtime.isCocoonJs)
             return;
         if (!Cocoon.Store.canPurchase())
             return;

@@ -35,6 +35,7 @@ Visit [our help center](https://support.ludei.com).
 
 ### Nov 04, 2014
 * Plugin updated to the 3.0.4 version.
+* Added Screencanvas fix for non Canvas+ environments.
 
 ### Oct 24, 2014
 * Added setMaxMemory feature.

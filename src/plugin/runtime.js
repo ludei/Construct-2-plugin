@@ -300,6 +300,12 @@ cr.plugins_.CJSAds = function(runtime) {
         Cnds.prototype.OnKeyboardOK = function() {
             return true;
         };
+        Cnds.prototype.IsLoggedIn = function() {
+            if (this.runtime.isCocoonJs)
+                return this.socialServiceAvailable && this.socialServiceInterface.isLoggedIn();
+            else
+                return false;
+        };
         Cnds.prototype.onSocialServiceLoginSuccess = function() {
             return true;
         };

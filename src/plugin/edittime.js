@@ -100,6 +100,8 @@ AddCondition(39, cf_trigger, "On logout succeeded", "Social", "On Logout succeed
 
 AddCondition(40, cf_trigger, "On logout failed", "Social", "On Logout Failed", "Triggered if the logout of the social service has failed.", "onSocialServiceLogoutFailed");
 
+AddCondition(41, 0, "Is logged in", "Social", "Is Logged In", "True if the user is logged in.", "IsLoggedIn");
+
 /**
  * Actions
  */

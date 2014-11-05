@@ -33,6 +33,11 @@ This plugin already comes bundled with Construct 2, however the update rate of C
 Visit [our help center](https://support.ludei.com).
 ## Changelog
 
+### Nov 05, 2014
+* Plugin updated to the 3.0.4 version.
+* Added Screencanvas fix for non Canvas+ environments.
+* Updated  Leaderboards/Achievements templates. 
+
 ### Oct 24, 2014
 * Added setMaxMemory feature.
 * Added setNPOTEnabled feature.

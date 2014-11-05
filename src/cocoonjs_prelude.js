@@ -1148,6 +1148,7 @@ Cocoon.define("Cocoon.Utils" , function(extension){
      */
     extension.setNPOTEnabled = function (enabled) {
         if (Cocoon.nativeAvailable && navigator.isCocoonJS) {
+            alert("npot"); 
             return window.ext.IDTK_APP.makeCall("setNPOTEnabled", enabled);
         }
     };

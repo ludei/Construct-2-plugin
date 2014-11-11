@@ -1332,7 +1332,7 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
             return Cocoon.callNative("IDTK_APP", "showTextDialog", args, true);
         }else{
             setTimeout(function() {
-                var result = prompt(properties.message, properties.text);
+                var result = prompt(params.message, params.text);
                 var eventObject = result ? Cocoon.Dialog.onTextDialogFinished : Cocoon.Dialog.onTextDialogCancelled;
                 eventObject.notifyEventListeners(result);
             }, 0);
@@ -1392,7 +1392,7 @@ Cocoon.define("Cocoon.Dialog" , function(extension){
             return Cocoon.callNative("IDTK_APP", "showMessageBox", args, true);
         }else{
             setTimeout(function() {
-                var result = confirm(properties.message);
+                var result = confirm(params.message);
                 var eventObject = result ? Cocoon.Dialog.onMessageBoxConfirmed : Cocoon.Dialog.onMessageBoxDenied;
                 eventObject.notifyEventListeners();
             }, 0);

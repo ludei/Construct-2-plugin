@@ -121,6 +121,7 @@ cr.plugins_.CJSAds = function(runtime) {
                             self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.OnPurchaseFail, self);
                         }
                     });
+
                     Cocoon.Store.on("load", {
                         started: function() {
                             self.runtime.trigger(cr.plugins_.CJSAds.prototype.cnds.onProductsFetchStarted, self);

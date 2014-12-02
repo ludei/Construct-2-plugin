@@ -10,7 +10,7 @@ function GetPluginSettings() {
         "type": "object", // not in layout
         "rotatable": false,
         "flags": pf_singleglobal,
-        "dependency": "achievements.html;achievement_locked.png;close.png;loading.gif;main.css;page_achievements.css;page_leaderboards.css;style.css;leaderboards.html;jquery-1.8.3.min.js;jquery.equalheights.js;"
+        "dependency": "achievements.html;achievement_locked.png;close.png;loading.gif;main.css;page_achievements.css;page_leaderboards.css;style.css;leaderboards.html;jquery.equalheights.js;jquery-1.8.3.min.js;"
     };
 };
 

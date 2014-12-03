@@ -20,7 +20,7 @@ The plugin can be configured by selecting the object "cocoonjsads" from the "Obj
 
 ![Configuration panel](http://oi60.tinypic.com/smu6vd.jpg)
 ## Installation
-### Manual Install
+### Manual installation
 * *Close Construct 2*.
 * Checkout the 'master' branch from this repository. 
 * Copy the file src/cocoonjs_prelude.js into *_CONSTRUCT_2_INSTALLATION_FOLDER_*\exporters\html5\, make sure to replace the file when you are asked.
@@ -33,10 +33,13 @@ This plugin already comes bundled with Construct 2, however the update rate of C
 Visit [our help center](https://support.ludei.com).
 ## Changelog
 
+### Nov 25, 2014
+* Plugin updated to the 3.0.5 version. 
+
 ### Nov 05, 2014
 * Plugin updated to the 3.0.4 version.
 * Added Screencanvas fix for non Canvas+ environments.
-* Updated  Leaderboards/Achievements templates. 
+* Updated Leaderboards/Achievements templates. 
 
 ### Oct 24, 2014
 * Added setMaxMemory feature.

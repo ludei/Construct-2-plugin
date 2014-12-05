@@ -3632,7 +3632,6 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 	* @property {string} Cocoon.Store.ProductInfo.downloadURL The URL of the asset to be downloaded for this purchase.
 	*/
 	extension.ProductInfo = {
-
 		productId : "productId",
 
 		productAlias : "productAlias",
@@ -3716,7 +3715,6 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 	*/
 	extension.PurchaseInfo = function(transactionId, purchaseTime, purchaseState, productId, quantity)
 	{
-
 		this.transactionId = transactionId;
 
 		this.purchaseTime = purchaseTime;
@@ -3765,7 +3763,8 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 		if (Cocoon.Store.nativeAvailable)
 		{
 			return Cocoon.callNative("IDTK_SRV_STORE", "getStoreType", arguments);
-		}else{
+		}
+		else{
 			return false;
 		}
 	};
@@ -3780,24 +3779,13 @@ Cocoon.define("Cocoon.Widget" , function(extension){
 	* @example
 	* Cocoon.Store.initialize();
 	*/
-	extension.initialize = function(params){
-		
-		params = params || {};
+	extension.initialize = function(params) 
+	{
+	    params = params || {};
 
-		var properties = {
-            sandbox : false,
-            managed : true
-        };
-
-        var args = Cocoon.clone(properties,params);
-
-		Cocoon.Store.requestInitialization({ 
-			sandbox: args[0],
-			managed: args[1]
-		});
-		
-		Cocoon.Store.start();
-	}
+	    Cocoon.Store.requestInitialization(params);
+	    Cocoon.Store.start();  
+	};
 
 	/**
 	* @memberof Cocoon.Store
@@ -8623,7 +8611,6 @@ Cocoon.define("Cocoon.Multiplayer" , function(extension){
      */
 	return extension;
 });
-
 
 Cocoon.Utils.setNPOTEnabled(false); //Change to true to reduce memory usage. It might reduce performance on old GPUs.
 //Cocoon.Utils.setMaxMemory(70); //Uncomment this line to set the maxMemory threshold in Megabytes.

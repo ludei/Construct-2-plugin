@@ -153,8 +153,8 @@ cr.plugins_.CJSAds = function(runtime) {
                     });
 
                     Cocoon.Store.initialize({
-                        sandbox: self.storeManaged,
-                        managed: self.storeSandboxed
+                        sandbox: self.storeSandboxed,
+                        managed: self.storeManaged
                     });
                 }
                 /**

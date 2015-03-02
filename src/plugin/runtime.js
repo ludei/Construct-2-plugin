@@ -402,12 +402,12 @@ cr.plugins_.CJSAds = function(runtime) {
         Acts.prototype.RefreshBanner = function() {
             if (!this.runtime.isCocoonJs)
                 return;
-            Cocoon.Ad.refreshBanner();
+            Cocoon.Ad.loadBanner();
         };
         Acts.prototype.RefreshFullScreen = function() {
             if (!this.runtime.isCocoonJs)
                 return;
-            Cocoon.Ad.refreshInterstitial();
+            Cocoon.Ad.loadInterstitial();
         };
         Acts.prototype.Purchase = function(productid) {
             if (!this.runtime.isCocoonJs)

@@ -33,7 +33,7 @@ This plugin already comes bundled with Construct 2, however the update rate of C
 Visit [our help center](https://support.ludei.com).
 ## Changelog
 
-### Jan 29, 2014
+### Jan 29, 2015
 * Added a second capx with minor changes and improved usability for stable r195 or higher.  
 
 ### Nov 25, 2014
